@@ -63,7 +63,7 @@ const ClosableDrawer = ({ open, onClose }) => {
   console.log(keyword);
 
   return (
-    <nav className={classes.drawer}>
+    <Box component="nav" className={classes.drawer}>
       <Drawer
         anchor="right"
         open={open}
@@ -104,7 +104,7 @@ const ClosableDrawer = ({ open, onClose }) => {
           </ListItem>
         </List>
       </Drawer>
-    </nav>
+    </Box>
   );
 };
 

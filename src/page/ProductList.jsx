@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import ProductCard from '../components/Products/ProductCard';
+import { ProductCard } from 'components/Products';
 
 const ProductList = () => {
   return (

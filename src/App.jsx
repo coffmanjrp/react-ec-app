@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from 'components/Header';
-import { ProductList } from 'page';
+import { ProductDetail, ProductList } from 'page';
 
 const App = () => {
   return (
@@ -9,6 +9,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </Router>
     </div>

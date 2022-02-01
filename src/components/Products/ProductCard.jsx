@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import {
   Box,
@@ -44,8 +45,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductCard = () => {
+const ProductCard = ({ id, name, images, price }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
@@ -55,16 +57,17 @@ const ProductCard = () => {
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
-        image={NoImage}
-        title={'Lorem ipsum'}
+        image={images[0] || NoImage}
+        title={name}
+        onClick={() => navigate(`/product/${id}`)}
       />
       <CardContent className={classes.content}>
-        <Box>
+        <Box onClick={() => navigate(`/product/${id}`)}>
           <Typography variant="body1" color="textSecondary">
-            Lorem ipsum
+            {name}
           </Typography>
           <Typography variant="body1" className={classes.price}>
-            $ 500.00
+            $ {price}
           </Typography>
         </Box>
         <IconButton onClick={handleClick}>
@@ -75,7 +78,14 @@ const ProductCard = () => {
           open={Boolean(anchorEl)}
           onClick={handleClose}
         >
-          <MenuItem onClick={handleClose}>Edit</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate(`/product/edit/${id}`);
+            }}
+          >
+            Edit
+          </MenuItem>
           <MenuItem onClick={handleClose}>Remove</MenuItem>
         </Menu>
       </CardContent>

@@ -72,8 +72,8 @@ const ClosableDrawer = ({ open, onClose }) => {
       >
         <Box className={classes.searchField}>
           <TextInput
-            type={'text'}
-            label={'Enter a keyword'}
+            type="text"
+            label="Enter a keyword"
             fullWidth={false}
             multiple={false}
             rows={1}

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from 'components/Header';
-import { ProductDetail, ProductList } from 'page';
+import { ProductDetail, ProductEdit, ProductList } from 'page';
 
 const App = () => {
   return (
@@ -10,6 +10,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/product/edit/:id" element={<ProductEdit />} />
         </Routes>
       </Router>
     </div>

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { ImageArea, SetSizeArea } from 'components/Products';
-import { PrimaryButton, SelectBox, TextInput } from 'components/UIkit';
+import { SelectBox, TextInput } from 'components/UIkit';
+import { PrimaryButton } from 'components/UIkit/CustomButtons';
 
 const genders = [
   { id: 'all', name: 'All' },
@@ -30,7 +31,7 @@ const ProductEdit = () => {
         <ImageArea />
         <TextInput
           type="text"
-          label="Product Name"
+          label="Name"
           fullWidth={true}
           multiline={false}
           rows={1}
@@ -40,7 +41,7 @@ const ProductEdit = () => {
         />
         <TextInput
           type="text"
-          label="Product Description"
+          label="Description"
           fullWidth={true}
           multiline={true}
           rows={5}

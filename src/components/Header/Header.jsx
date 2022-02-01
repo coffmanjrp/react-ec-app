@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
-import { makeStyles } from '@mui/styles';
+import { Link } from 'react-router-dom';
 import { AppBar, Box, Toolbar } from '@mui/material';
 import { ClosableDrawer, HeaderMenus } from '.';
 import logo from 'assets/img/logo.png';
 
-const useStyles = makeStyles({
+const classes = {
   root: { flexGrow: 1 },
   toolBar: {
     margin: '0 auto',
@@ -14,11 +14,10 @@ const useStyles = makeStyles({
   iconButtons: {
     margin: '0 0 0 auto',
   },
-});
+};
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const classes = useStyles();
 
   const handleDrawerToggle = useCallback(
     (e) => {
@@ -28,15 +27,17 @@ const Header = () => {
 
       setOpen((prevState) => !prevState);
     },
-    [open, setOpen]
+    [setOpen]
   );
 
   return (
-    <Box className={classes.root}>
+    <Box setIndex={classes.root}>
       <AppBar position="fixed" sx={{ bgcolor: '#fff', color: '#444' }}>
-        <Toolbar className={classes.toolBar}>
-          <img src={logo} alt="Logo" width="128px" />
-          <Box className={classes.iconButtons}>
+        <Toolbar sx={classes.toolBar}>
+          <Link to="/">
+            <img src={logo} alt="Logo" width="128px" />
+          </Link>
+          <Box sx={classes.iconButtons}>
             <HeaderMenus handleDrawerToggle={handleDrawerToggle} />
           </Box>
         </Toolbar>

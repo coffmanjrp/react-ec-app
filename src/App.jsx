@@ -3,6 +3,7 @@ import { Header } from 'components/Header';
 import {
   CartList,
   OrderConfirm,
+  OrderHistory,
   ProductDetail,
   ProductEdit,
   ProductList,
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/product/edit/:id" element={<ProductEdit />} />
           <Route path="/cart" element={<CartList />} />
           <Route path="/order/confirm" element={<OrderConfirm />} />
+          <Route path="/order/history" element={<OrderHistory />} />
         </Routes>
       </Router>
     </div>

@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
   Divider,
@@ -24,7 +25,7 @@ const menus = [
   },
   {
     id: 'history',
-    label: 'Shop History',
+    label: 'Order History',
     value: '/order/history',
     icon: <HistoryIcon />,
   },
@@ -32,6 +33,7 @@ const menus = [
 
 const ClosableDrawer = ({ open, onClose }) => {
   const [keyword, setKeyword] = useState('');
+  const navigate = useNavigate();
 
   const inputKeyword = useCallback(
     (e) => {
@@ -67,7 +69,7 @@ const ClosableDrawer = ({ open, onClose }) => {
         </SearchField>
         <List>
           {menus.map((menu) => (
-            <ListItem key={menu.id} button>
+            <ListItem key={menu.id} button onClick={() => navigate(menu.value)}>
               <ListItemIcon>{menu.icon}</ListItemIcon>
               <ListItemText primary={menu.label} />
             </ListItem>

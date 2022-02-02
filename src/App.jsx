@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import { Header } from 'components/Header';
 import {
   CartList,
@@ -14,7 +15,7 @@ import {
 
 const App = () => {
   return (
-    <div className="c-main">
+    <Main>
       <Router>
         <Header />
         <Routes>
@@ -29,8 +30,12 @@ const App = () => {
           <Route path="/order/history" element={<OrderHistory />} />
         </Routes>
       </Router>
-    </div>
+    </Main>
   );
 };
+
+const Main = styled('main')({
+  padding: '96px 0',
+});
 
 export default App;

@@ -1,6 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from 'components/Header';
-import { CartList, ProductDetail, ProductEdit, ProductList } from 'page';
+import {
+  CartList,
+  OrderConfirm,
+  ProductDetail,
+  ProductEdit,
+  ProductList,
+} from 'page';
 
 const App = () => {
   return (
@@ -12,6 +18,7 @@ const App = () => {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/product/edit/:id" element={<ProductEdit />} />
           <Route path="/cart" element={<CartList />} />
+          <Route path="/order/confirm" element={<OrderConfirm />} />
         </Routes>
       </Router>
     </div>

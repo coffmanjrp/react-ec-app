@@ -5,7 +5,7 @@ import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -45,7 +45,7 @@ const SignUp = () => {
         </PrimaryButton>
         <Box className="module-spacer--medium" />
         <Typography variant="subtitle2">
-          <StyledLink to="/signin/reset">Create account</StyledLink>
+          <StyledLink to="/signup">Create account</StyledLink>
         </Typography>
         <Typography variant="subtitle2">
           <StyledLink to="/signin/reset">Forgot your password?</StyledLink>
@@ -60,4 +60,4 @@ const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
 }));
 
-export default SignUp;
+export default SignIn;

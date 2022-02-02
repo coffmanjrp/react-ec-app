@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import {
-  Box,
   Divider,
   Drawer,
   IconButton,
@@ -15,24 +14,6 @@ import HistoryIcon from '@mui/icons-material/History';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SearchIcon from '@mui/icons-material/Search';
 import { TextInput } from '../UIkit';
-
-const useStyles = makeStyles((theme) => ({
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      flexShrink: 0,
-      width: 256,
-    },
-  },
-  toolBar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: 256,
-  },
-  searchField: {
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: 32,
-  },
-}));
 
 const menus = [
   {
@@ -51,7 +32,6 @@ const menus = [
 
 const ClosableDrawer = ({ open, onClose }) => {
   const [keyword, setKeyword] = useState('');
-  const classes = useStyles();
 
   const inputKeyword = useCallback(
     (e) => {
@@ -63,14 +43,14 @@ const ClosableDrawer = ({ open, onClose }) => {
   console.log(keyword);
 
   return (
-    <Box component="nav" className={classes.drawer}>
+    <StyledDrawer component="nav">
       <Drawer
         anchor="right"
         open={open}
-        classes={{ paper: classes.drawerPaper }}
+        sx={classes.drawerPaper}
         onClose={(e) => onClose(e)}
       >
-        <Box className={classes.searchField}>
+        <SearchField>
           <TextInput
             type="text"
             label="Enter a keyword"
@@ -84,8 +64,7 @@ const ClosableDrawer = ({ open, onClose }) => {
           <IconButton>
             <SearchIcon />
           </IconButton>
-        </Box>
-        <Divider />
+        </SearchField>
         <List>
           {menus.map((menu) => (
             <ListItem key={menu.id} button>
@@ -104,8 +83,27 @@ const ClosableDrawer = ({ open, onClose }) => {
           </ListItem>
         </List>
       </Drawer>
-    </Box>
+    </StyledDrawer>
   );
+};
+
+const StyledDrawer = styled('nav')(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
+    flexShrink: 0,
+    width: 256,
+  },
+}));
+
+const SearchField = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  marginLeft: 32,
+});
+
+const classes = {
+  drawerPaper: {
+    width: 256,
+  },
 };
 
 export default ClosableDrawer;

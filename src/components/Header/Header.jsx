@@ -4,18 +4,6 @@ import { AppBar, Box, Toolbar } from '@mui/material';
 import { ClosableDrawer, HeaderMenus } from '.';
 import logo from 'assets/img/logo.png';
 
-const classes = {
-  root: { flexGrow: 1 },
-  toolBar: {
-    margin: '0 auto',
-    width: '100%',
-    maxWidth: 1024,
-  },
-  iconButtons: {
-    margin: '0 0 0 auto',
-  },
-};
-
 const Header = () => {
   const [open, setOpen] = useState(false);
 
@@ -45,6 +33,18 @@ const Header = () => {
       <ClosableDrawer open={open} onClose={handleDrawerToggle} />
     </Box>
   );
+};
+
+const classes = {
+  root: { flexGrow: 1 },
+  toolBar: {
+    margin: '0 auto',
+    width: '100%',
+    maxWidth: 1024,
+  },
+  iconButtons: {
+    margin: '0 0 0 auto',
+  },
 };
 
 export default Header;

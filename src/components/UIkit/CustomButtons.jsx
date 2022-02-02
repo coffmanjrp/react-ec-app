@@ -1,6 +1,22 @@
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+export const PrimaryButton = ({ onClick, label }) => {
+  return (
+    <PrimaryStyled variant="contained" onClick={onClick}>
+      {label}
+    </PrimaryStyled>
+  );
+};
+
+export const GreyButton = ({ onClick, label }) => {
+  return (
+    <GreyStyled variant="contained" onClick={onClick}>
+      {label}
+    </GreyStyled>
+  );
+};
+
 const PrimaryStyled = styled(Button)(({ theme }) => ({
   marginBottom: 16,
   height: 48,
@@ -18,19 +34,3 @@ const GreyStyled = styled(Button)(({ theme }) => ({
   fontSize: '1rem',
   color: '#000',
 }));
-
-export const PrimaryButton = ({ onClick, label }) => {
-  return (
-    <PrimaryStyled variant="contained" onClick={onClick}>
-      {label}
-    </PrimaryStyled>
-  );
-};
-
-export const GreyButton = ({ onClick, label }) => {
-  return (
-    <GreyStyled variant="contained" onClick={onClick}>
-      {label}
-    </GreyStyled>
-  );
-};

@@ -1,19 +1,8 @@
-import { makeStyles } from '@mui/styles';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
-const useStyles = makeStyles({
-  formControl: {
-    marginBottom: 16,
-    minWidth: 128,
-    width: '100%',
-  },
-});
-
 const SelectBox = ({ label, required, value, options, select }) => {
-  const classes = useStyles();
-
   return (
-    <FormControl variant="standard" className={classes.formControl}>
+    <FormControl variant="standard" sx={classes.formControl}>
       <InputLabel>{label}</InputLabel>
       <Select
         required={required}
@@ -28,6 +17,14 @@ const SelectBox = ({ label, required, value, options, select }) => {
       </Select>
     </FormControl>
   );
+};
+
+const classes = {
+  formControl: {
+    marginBottom: 2,
+    minWidth: 128,
+    width: '100%',
+  },
 };
 
 export default SelectBox;

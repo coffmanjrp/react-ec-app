@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
   IconButton,
@@ -16,25 +16,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { TextInput } from 'components/UIkit';
 
-const useStyles = makeStyles({
-  iconCell: {
-    padding: 0,
-    width: 48,
-    height: 48,
-  },
-  checkIcon: {
-    float: 'right',
-  },
-  flexContainer: {
-    display: 'flex',
-  },
-});
-
 const SetSizeArea = ({ sizes, setSizes }) => {
   const [index, setIndex] = useState(0);
   const [size, setSize] = useState('');
   const [quantity, setQuantity] = useState(0);
-  const classes = useStyles();
 
   useEffect(() => setIndex(sizes.length), [sizes.length]);
 
@@ -83,8 +68,8 @@ const SetSizeArea = ({ sizes, setSizes }) => {
             <TableRow>
               <TableCell>Size</TableCell>
               <TableCell>Quantity</TableCell>
-              <TableCell className={classes.iconCell} />
-              <TableCell className={classes.iconCell} />
+              <TableCell sx={classes.iconCell} />
+              <TableCell sx={classes.iconCell} />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -95,7 +80,7 @@ const SetSizeArea = ({ sizes, setSizes }) => {
                   <TableCell>2</TableCell>
                   <TableCell>
                     <IconButton
-                      className={classes.iconCell}
+                      sx={classes.iconCell}
                       onClick={() => editSize(idx, item.size, item.quantity)}
                     >
                       <EditIcon />
@@ -103,7 +88,7 @@ const SetSizeArea = ({ sizes, setSizes }) => {
                   </TableCell>
                   <TableCell>
                     <IconButton
-                      className={classes.iconCell}
+                      sx={classes.iconCell}
                       onClick={() => deleteSize(idx)}
                     >
                       <DeleteIcon />
@@ -113,7 +98,7 @@ const SetSizeArea = ({ sizes, setSizes }) => {
               ))}
           </TableBody>
         </Table>
-        <Box className={classes.flexContainer}>
+        <FlexContainer>
           <TextInput
             type="text"
             label="Size"
@@ -134,9 +119,9 @@ const SetSizeArea = ({ sizes, setSizes }) => {
             value={quantity}
             onChange={inputQuantity}
           />
-        </Box>
+        </FlexContainer>
         <IconButton
-          className={classes.checkIcon}
+          sx={classes.checkIcon}
           onClick={() => addSize(index, size, quantity)}
         >
           <CheckCircleIcon />
@@ -144,6 +129,21 @@ const SetSizeArea = ({ sizes, setSizes }) => {
       </TableContainer>
     </Box>
   );
+};
+
+const FlexContainer = styled('div')({
+  display: 'flex',
+});
+
+const classes = {
+  iconCell: {
+    padding: 0,
+    width: 48,
+    height: 48,
+  },
+  checkIcon: {
+    float: 'right',
+  },
 };
 
 export default SetSizeArea;

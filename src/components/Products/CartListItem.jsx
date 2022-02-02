@@ -8,22 +8,6 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const CartListImage = styled('img')({
-  margin: 16,
-  width: 96,
-  height: 96,
-  objectFit: 'cover',
-});
-
-const classes = {
-  list: {
-    height: 128,
-  },
-  text: {
-    width: '100%',
-  },
-};
-
 const CartListItem = ({ image, name, size, price }) => {
   return (
     <>
@@ -41,6 +25,22 @@ const CartListItem = ({ image, name, size, price }) => {
       </ListItem>
     </>
   );
+};
+
+const CartListImage = styled('img')({
+  margin: 16,
+  width: 96,
+  height: 96,
+  objectFit: 'cover',
+});
+
+const classes = {
+  list: {
+    height: 128,
+  },
+  text: {
+    width: '100%',
+  },
 };
 
 export default CartListItem;

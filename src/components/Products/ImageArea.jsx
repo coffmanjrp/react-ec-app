@@ -3,13 +3,6 @@ import { ImagePreview } from '.';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import NoImage from 'assets/img/no_image.png';
 
-const classes = {
-  icon: {
-    width: 48,
-    height: 48,
-  },
-};
-
 const ImageArea = () => {
   return (
     <Box>
@@ -27,6 +20,13 @@ const ImageArea = () => {
       </Box>
     </Box>
   );
+};
+
+const classes = {
+  icon: {
+    width: 48,
+    height: 48,
+  },
 };
 
 export default ImageArea;

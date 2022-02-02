@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -14,61 +14,27 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NoImage from 'assets/img/no_image.png';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    cursor: 'pointer',
-    [theme.breakpoints.down('sm')]: {
-      margin: 8,
-      width: 'calc(50% - 16px)',
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: 16,
-      width: 'calc(33.333% - 32px)',
-    },
-  },
-  content: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '16px 8px',
-    textAlign: 'left',
-    '&:last-child': {
-      paddingBottom: 16,
-    },
-  },
-  media: {
-    paddingTop: '100%',
-    height: 0,
-  },
-  price: {
-    fontSize: '1rem',
-    color: theme.palette.secondary.main,
-  },
-}));
-
 const ProductCard = ({ id, name, images, price }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-  const classes = useStyles();
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
   return (
-    <Card className={classes.root}>
+    <ProductCardRoot>
       <CardMedia
-        className={classes.media}
+        sx={classes.media}
         image={images[0] || NoImage}
         title={name}
         onClick={() => navigate(`/product/${id}`)}
       />
-      <CardContent className={classes.content}>
+      <CardContent sx={classes.content}>
         <Box onClick={() => navigate(`/product/${id}`)}>
           <Typography variant="body1" color="textSecondary">
             {name}
           </Typography>
-          <Typography variant="body1" className={classes.price}>
-            $ {price}
-          </Typography>
+          <Price variant="body1">$ {price}</Price>
         </Box>
         <IconButton onClick={handleClick}>
           <MoreVertIcon />
@@ -89,8 +55,41 @@ const ProductCard = ({ id, name, images, price }) => {
           <MenuItem onClick={handleClose}>Remove</MenuItem>
         </Menu>
       </CardContent>
-    </Card>
+    </ProductCardRoot>
   );
+};
+
+const ProductCardRoot = styled(Card)(({ theme }) => ({
+  cursor: 'pointer',
+  [theme.breakpoints.down('sm')]: {
+    margin: 8,
+    width: 'calc(50% - 16px)',
+  },
+  [theme.breakpoints.up('sm')]: {
+    margin: 16,
+    width: 'calc(33.333% - 32px)',
+  },
+}));
+
+const Price = styled(Typography)(({ theme }) => ({
+  fontSize: '1rem',
+  color: theme.palette.secondary.main,
+}));
+
+const classes = {
+  content: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '16px 8px',
+    textAlign: 'left',
+    '&:last-child': {
+      paddingBottom: 2,
+    },
+  },
+  media: {
+    paddingTop: '100%',
+    height: 0,
+  },
 };
 
 export default ProductCard;

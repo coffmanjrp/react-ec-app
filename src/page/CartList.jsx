@@ -4,14 +4,6 @@ import { CartListItem } from 'components/Products';
 import { GreyButton, PrimaryButton } from 'components/UIkit/CustomButtons';
 import NoImage from 'assets/img/no_image.png';
 
-const classes = {
-  root: {
-    margin: '0 auto',
-    width: '100%',
-    maxWidth: 512,
-  },
-};
-
 const CartList = () => {
   const navigate = useNavigate();
 
@@ -33,6 +25,14 @@ const CartList = () => {
       </Box>
     </Box>
   );
+};
+
+const classes = {
+  root: {
+    margin: '0 auto',
+    width: '100%',
+    maxWidth: 512,
+  },
 };
 
 export default CartList;

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import {
   IconButton,
   Table,
@@ -10,17 +9,7 @@ import {
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-const useStyles = makeStyles({
-  iconCell: {
-    padding: 0,
-    width: 48,
-    height: 48,
-  },
-});
-
 const SizeTable = ({ sizes }) => {
-  const classes = useStyles();
-
   return (
     <TableContainer>
       <Table>
@@ -32,7 +21,7 @@ const SizeTable = ({ sizes }) => {
                   {size}
                 </TableCell>
                 <TableCell>Held.</TableCell>
-                <TableCell className={classes.iconCell}>
+                <TableCell sx={classes.iconCell}>
                   <IconButton>
                     <AddShoppingCartIcon />
                   </IconButton>
@@ -48,6 +37,14 @@ const SizeTable = ({ sizes }) => {
       </Table>
     </TableContainer>
   );
+};
+
+const classes = {
+  iconCell: {
+    padding: 0,
+    width: 48,
+    height: 48,
+  },
 };
 
 export default SizeTable;

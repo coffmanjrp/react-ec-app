@@ -7,6 +7,7 @@ import {
   ProductDetail,
   ProductEdit,
   ProductList,
+  SignIn,
   SignUp,
 } from 'page';
 
@@ -17,6 +18,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route path="/" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/product/edit/:id" element={<ProductEdit />} />

@@ -7,6 +7,7 @@ import {
   ProductDetail,
   ProductEdit,
   ProductList,
+  SignUp,
 } from 'page';
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/product/edit/:id" element={<ProductEdit />} />

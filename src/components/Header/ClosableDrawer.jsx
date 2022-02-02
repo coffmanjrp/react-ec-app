@@ -42,8 +42,6 @@ const ClosableDrawer = ({ open, onClose }) => {
     [setKeyword]
   );
 
-  console.log(keyword);
-
   return (
     <StyledDrawer component="nav">
       <Drawer

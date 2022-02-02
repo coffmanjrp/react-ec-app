@@ -16,8 +16,6 @@ const OrderHistoryItem = ({
   const orderedDate = updated_at;
   const shippingDate = shipping_date;
 
-  console.log(products);
-
   return (
     <Box>
       <Box className="module-spacer--small" />

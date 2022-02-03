@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -13,16 +14,22 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NoImage from 'assets/img/no_image.png';
+import { deleteProduct } from 'redux/products/productsActions';
 
 const ProductCard = ({ id, name, images, price }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
   const handleEdit = () => {
     handleClose();
     navigate(`/product/edit/${id}`);
+  };
+  const handleRemove = (id) => {
+    handleClose();
+    dispatch(deleteProduct(id));
   };
 
   return (
@@ -49,7 +56,7 @@ const ProductCard = ({ id, name, images, price }) => {
           onClick={handleClose}
         >
           <MenuItem onClick={handleEdit}>Edit</MenuItem>
-          <MenuItem onClick={handleClose}>Remove</MenuItem>
+          <MenuItem onClick={() => handleRemove(id)}>Remove</MenuItem>
         </Menu>
       </CardContent>
     </ProductCardRoot>

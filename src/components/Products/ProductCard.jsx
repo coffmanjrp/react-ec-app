@@ -20,12 +20,16 @@ const ProductCard = ({ id, name, images, price }) => {
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
+  const handleEdit = () => {
+    handleClose();
+    navigate(`/product/edit/${id}`);
+  };
 
   return (
     <ProductCardRoot>
       <CardMedia
         sx={classes.media}
-        image={images[0] || NoImage}
+        image={images[0].path || NoImage}
         title={name}
         onClick={() => navigate(`/product/${id}`)}
       />
@@ -44,14 +48,7 @@ const ProductCard = ({ id, name, images, price }) => {
           open={Boolean(anchorEl)}
           onClick={handleClose}
         >
-          <MenuItem
-            onClick={() => {
-              handleClose();
-              navigate(`/product/edit/${id}`);
-            }}
-          >
-            Edit
-          </MenuItem>
+          <MenuItem onClick={handleEdit}>Edit</MenuItem>
           <MenuItem onClick={handleClose}>Remove</MenuItem>
         </Menu>
       </CardContent>

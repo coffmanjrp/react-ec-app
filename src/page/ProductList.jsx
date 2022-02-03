@@ -1,29 +1,19 @@
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
 import { ProductCard } from 'components/Products';
-import NoImage from 'assets/img/no_image.png';
-
-const products = [
-  {
-    id: 1,
-    name: 'Product One',
-    images: [NoImage, NoImage, NoImage],
-    price: 500.0,
-  },
-  {
-    id: 2,
-    name: 'Product Two',
-    images: [NoImage, NoImage, NoImage],
-    price: 300.0,
-  },
-  {
-    id: 3,
-    name: 'Product Three',
-    images: [NoImage, NoImage, NoImage],
-    price: 30.0,
-  },
-];
+import { fetchProducts } from 'redux/products/productsActions';
 
 const ProductList = () => {
+  const { list: products } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box component="section" className="c-section-wrapin">
       <Box className="p-grid__row">

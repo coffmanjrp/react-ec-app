@@ -1,11 +1,21 @@
 import { Box } from '@mui/material';
 
-const ImagePreview = ({ path }) => {
+const ImagePreview = ({ id, path, deleteImage }) => {
   return (
-    <Box className="p-media__thumb">
+    <Box
+      sx={classes.thumbnail}
+      className="p-media__thumb"
+      onClick={() => deleteImage(id)}
+    >
       <img src={path} alt="Preview" />
     </Box>
   );
+};
+
+const classes = {
+  thumbnail: {
+    cursor: 'pointer',
+  },
 };
 
 export default ImagePreview;

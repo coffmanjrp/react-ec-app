@@ -1,26 +1,55 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Box, Typography } from '@mui/material';
+import { doc, getDoc } from 'firebase/firestore';
 import { ImageArea, SetSizeArea } from 'components/Products';
 import { SelectBox, TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
-
-const genders = [
-  { id: 'all', name: 'All' },
-  { id: 'male', name: 'Mens' },
-  { id: 'female', name: 'Women' },
-];
+import { db } from 'db';
+import { saveProduct } from 'redux/products/productsActions';
+import { genders, categories } from 'utils/data';
 
 const ProductEdit = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [gender, setGender] = useState('');
   const [price, setPrice] = useState('');
   const [images, setImages] = useState([]);
   const [sizes, setSizes] = useState([]);
-  const params = useParams();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchProduct(id);
+  }, [id]);
+
+  const fetchProduct = async (id) => {
+    if (id !== '') {
+      const docRef = await doc(db, 'products', id);
+      const product = await getDoc(docRef);
+      const data = product.data();
+
+      setName(data.name);
+      setDescription(data.description);
+      setCategory(data.category);
+      setGender(data.gender);
+      setPrice(data.price);
+      setSizes(data.sizes);
+      setImages(data.images);
+    }
+  };
+
+  const handleSave = () => {
+    dispatch(
+      saveProduct(id, name, description, category, gender, price, images, sizes)
+    );
+
+    setTimeout(() => navigate('/'), 1000);
+  };
 
   return (
     <Box component="section">
@@ -28,7 +57,7 @@ const ProductEdit = () => {
         Register and edit product
       </Typography>
       <Box className="c-section-container">
-        <ImageArea />
+        <ImageArea {...{ id, images, setImages }} />
         <TextInput
           type="text"
           label="Name"
@@ -71,13 +100,13 @@ const ProductEdit = () => {
           rows={1}
           required={true}
           value={price}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => setPrice(e.target.value)}
         />
         <Box className="module-spacer--small" />
         <SetSizeArea sizes={sizes} setSizes={setSizes} />
         <Box className="module-spacer--small" />
         <Box className="center">
-          <PrimaryButton label="Save" onClick={() => console.log('Save')} />
+          <PrimaryButton label="Save" onClick={handleSave} />
         </Box>
       </Box>
     </Box>

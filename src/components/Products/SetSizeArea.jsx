@@ -75,9 +75,9 @@ const SetSizeArea = ({ sizes, setSizes }) => {
           <TableBody>
             {sizes.length > 0 &&
               sizes.map((item, idx) => (
-                <TableRow>
-                  <TableCell>XL</TableCell>
-                  <TableCell>2</TableCell>
+                <TableRow key={idx}>
+                  <TableCell>{item.size}</TableCell>
+                  <TableCell>{item.quantity}</TableCell>
                   <TableCell>
                     <IconButton
                       sx={classes.iconCell}

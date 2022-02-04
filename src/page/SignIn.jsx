@@ -15,7 +15,8 @@ const SignIn = () => {
 
   const handleSignIn = () => {
     dispatch(signIn(email, password));
-    navigate('/');
+
+    setTimeout(() => navigate('/'), 1000);
   };
 
   return (

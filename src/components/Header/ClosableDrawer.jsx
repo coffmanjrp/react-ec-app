@@ -32,7 +32,8 @@ const ClosableDrawer = ({ open, onClose }) => {
   const handleSignOut = (e) => {
     onClose(e);
     dispatch(signOut());
-    navigate('/signin');
+
+    setTimeout(() => navigate('/signin'), 1000);
   };
 
   return (

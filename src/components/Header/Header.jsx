@@ -2,10 +2,12 @@ import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppBar, Box, Toolbar } from '@mui/material';
 import { ClosableDrawer, HeaderMenus } from '.';
+import { useAuthStatus } from 'hooks';
 import logo from 'assets/img/logo.png';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const { loggedIn, checkingStatus } = useAuthStatus();
 
   const handleDrawerToggle = useCallback(
     (e) => {
@@ -25,9 +27,11 @@ const Header = () => {
           <Link to="/">
             <img src={logo} alt="Logo" width="128px" />
           </Link>
-          <Box sx={classes.iconButtons}>
-            <HeaderMenus handleDrawerToggle={handleDrawerToggle} />
-          </Box>
+          {loggedIn && !checkingStatus && (
+            <Box sx={classes.iconButtons}>
+              <HeaderMenus handleDrawerToggle={handleDrawerToggle} />
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
       <ClosableDrawer open={open} onClose={handleDrawerToggle} />

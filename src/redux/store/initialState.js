@@ -4,10 +4,12 @@ const initialState = {
   },
   users: {
     cart: [],
+    created_at: null,
     isSignedIn: false,
     orders: [],
     role: '',
     uid: '',
+    updated_at: null,
     username: '',
   },
 };

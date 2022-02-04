@@ -1,15 +1,25 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
+import { signUp } from 'redux/users/usersActions';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignUp = (username, email, password, confirmedPassword) => {
+    dispatch(signUp(username, email, password, confirmedPassword));
+
+    setTimeout(() => navigate('/'), 1000);
+  };
 
   return (
     <Box className="c-section-container">
@@ -62,7 +72,7 @@ const SignUp = () => {
         <PrimaryButton
           label="Register"
           onClick={() =>
-            console.log({ username, email, password, confirmedPassword })
+            handleSignUp(username, email, password, confirmedPassword)
           }
         >
           Register

@@ -5,6 +5,9 @@ import {
   getDocs,
   serverTimestamp,
   updateDoc,
+  query,
+  orderBy,
+  where,
 } from 'firebase/firestore';
 import { db } from 'db';
 import {
@@ -15,10 +18,14 @@ import {
 
 const productsRef = collection(db, 'products');
 
-export const fetchProducts = () => async (dispatch) => {
-  const productList = [];
+export const fetchProducts = (gender, category) => async (dispatch) => {
+  let q = query(productsRef, orderBy('updated_at', 'desc'));
+  q = gender ? query(productsRef, where('gender', '==', gender)) : q;
+  q = category ? query(where('category', '==', category)) : q;
 
-  const snapshot = await getDocs(productsRef);
+  const snapshot = await getDocs(q);
+
+  const productList = [];
 
   await snapshot.docs.forEach((doc) =>
     productList.push({ ...doc.data(), id: doc.id })
@@ -51,14 +58,14 @@ export const saveProduct =
       price: parseInt(price, 10),
       images,
       sizes,
-      updatedAt: timestamp,
+      updated_at: timestamp,
     };
 
     const docRef = await doc(productsRef, id);
 
     if (id === '') {
       data.id = docRef.id;
-      data.createdAt = timestamp;
+      data.created_at = timestamp;
     }
 
     await updateDoc(docRef, data);

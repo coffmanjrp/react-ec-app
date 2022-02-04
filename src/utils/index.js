@@ -11,3 +11,13 @@ export const dateTimeToString = (date) => {
     '00' + date.getMinutes()
   ).slice(-2)}:${('00' + date.getSeconds()).slice(-2)}`;
 };
+
+export const generateRandomID = () => {
+  const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const N = 16;
+  const id = Array.from(crypto.getRandomValues(new Uint8Array(N)))
+    .map((n) => S[n % S.length])
+    .join('');
+
+  return id;
+};

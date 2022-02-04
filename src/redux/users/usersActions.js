@@ -9,16 +9,20 @@ import {
   query,
   orderBy,
   where,
+  getDoc,
 } from 'firebase/firestore';
 import { auth, db } from 'db';
 import {
   FETCH_ORDERS_HISTORY,
   FETCH_PRODUCTS_IN_CART,
   SIGN_IN,
-  SIGN_OUT,
   SIGN_UP,
 } from './usersConstants';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
 
 const usersRef = collection(db, 'users');
 
@@ -47,22 +51,53 @@ export const signUp =
     const user = userCredentials.user;
 
     if (user) {
-      const uid = user.uid;
+      const { uid } = user;
       const timestamp = serverTimestamp();
 
       const userInitialData = {
         created_at: timestamp,
-        isSignedIn: true,
         email,
         role: 'customer',
         updated_at: timestamp,
         username,
       };
 
-      const userRef = doc(usersRef, uid);
+      const userRef = await doc(usersRef, uid);
 
       await setDoc(userRef, userInitialData);
 
       dispatch({ type: SIGN_UP, payload: userInitialData });
     }
   };
+
+export const signIn = (email, password) => async (dispatch) => {
+  if (email === '' || password === '') {
+    alert('Required fields are not filled in. Please filled in all fields.');
+    return false;
+  }
+
+  const userCredentials = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  const user = userCredentials.user;
+
+  if (user) {
+    const { uid } = user;
+
+    const userRef = await doc(usersRef, uid);
+    const snapshot = await getDoc(userRef);
+    const data = snapshot.data();
+
+    const userData = {
+      role: data.role,
+      uid,
+      username: data.username,
+    };
+
+    dispatch({ type: SIGN_IN, payload: userData });
+  }
+};
+
+export const signOut = () => async () => await auth.signOut();

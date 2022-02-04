@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
   Divider,
@@ -10,30 +11,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import HistoryIcon from '@mui/icons-material/History';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SearchIcon from '@mui/icons-material/Search';
 import { TextInput } from '../UIkit';
-
-const menus = [
-  {
-    id: 'register',
-    label: 'Register Item',
-    value: '/product/edit',
-    icon: <AddCircleIcon />,
-  },
-  {
-    id: 'history',
-    label: 'Order History',
-    value: '/order/history',
-    icon: <HistoryIcon />,
-  },
-];
+import { signOut } from 'redux/users/usersActions';
+import { menus } from 'utils/data';
 
 const ClosableDrawer = ({ open, onClose }) => {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const inputKeyword = useCallback(
     (e) => {
@@ -41,6 +28,12 @@ const ClosableDrawer = ({ open, onClose }) => {
     },
     [setKeyword]
   );
+
+  const handleSignOut = (e) => {
+    onClose(e);
+    dispatch(signOut());
+    navigate('/signin');
+  };
 
   return (
     <StyledDrawer component="nav">
@@ -75,11 +68,11 @@ const ClosableDrawer = ({ open, onClose }) => {
         </List>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem button onClick={handleSignOut}>
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
-            <ListItemText primary={'Logout'} />
+            <ListItemText primary={'Sign Out'} />
           </ListItem>
         </List>
       </Drawer>

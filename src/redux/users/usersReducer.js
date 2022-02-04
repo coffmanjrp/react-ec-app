@@ -2,7 +2,6 @@ import {
   FETCH_ORDERS_HISTORY,
   FETCH_PRODUCTS_IN_CART,
   SIGN_IN,
-  SIGN_OUT,
   SIGN_UP,
 } from './usersConstants';
 import initialState from '../store/initialState';

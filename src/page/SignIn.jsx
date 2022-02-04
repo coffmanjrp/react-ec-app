@@ -1,13 +1,22 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
+import { signIn } from 'redux/users/usersActions';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignIn = () => {
+    dispatch(signIn(email, password));
+    navigate('/');
+  };
 
   return (
     <Box className="c-section-container">
@@ -37,10 +46,7 @@ const SignIn = () => {
       />
       <Box className="module-spacer--medium" />
       <Box className="center">
-        <PrimaryButton
-          label="Sign In"
-          onClick={() => console.log({ email, password })}
-        >
+        <PrimaryButton label="Sign In" onClick={handleSignIn}>
           Register
         </PrimaryButton>
         <Box className="module-spacer--medium" />

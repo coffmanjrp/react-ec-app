@@ -15,7 +15,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSignUp = (username, email, password, confirmedPassword) => {
+  const handleSignUp = () => {
     dispatch(signUp(username, email, password, confirmedPassword));
 
     setTimeout(() => navigate('/'), 1000);
@@ -69,12 +69,7 @@ const SignUp = () => {
       />
       <Box className="module-spacer--medium" />
       <Box className="center">
-        <PrimaryButton
-          label="Register"
-          onClick={() =>
-            handleSignUp(username, email, password, confirmedPassword)
-          }
-        >
+        <PrimaryButton label="Register" onClick={handleSignUp}>
           Register
         </PrimaryButton>
         <Box className="module-spacer--medium" />

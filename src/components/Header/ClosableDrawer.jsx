@@ -14,7 +14,7 @@ import {
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SearchIcon from '@mui/icons-material/Search';
 import { TextInput } from '../UIkit';
-import { signOut } from 'redux/users/usersActions';
+import { signOut } from 'redux/users/actions';
 import { menus } from 'utils/data';
 
 const ClosableDrawer = ({ open, onClose }) => {

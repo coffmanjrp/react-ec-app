@@ -7,7 +7,7 @@ import { ImageArea, SetSizeArea } from 'components/Products';
 import { SelectBox, TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { db } from 'db';
-import { saveProduct } from 'redux/products/productsActions';
+import { saveProduct } from 'redux/products/actions';
 import { genders, categories } from 'utils/data';
 
 const ProductEdit = () => {

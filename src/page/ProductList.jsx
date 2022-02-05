@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
 import { ProductCard } from 'components/Products';
-import { fetchProducts } from 'redux/products/productsActions';
+import { fetchProducts } from 'redux/products/actions';
 
 const ProductList = () => {
   const { list: products } = useSelector((state) => state.products);

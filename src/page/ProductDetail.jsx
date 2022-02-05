@@ -1,29 +1,81 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { collection, doc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
-import { Box, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { ImageSwiper, SizeTable } from 'components/Products';
+import { db } from 'db';
+import { addProductToCart } from 'redux/users/actions';
+import { returnCodeToBr } from 'utils';
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
-  const params = useParams();
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => fetchProduct(), []);
+
+  const fetchProduct = async () => {
+    const productsRef = await collection(db, 'products');
+    const product = await doc(productsRef, id);
+    const snapshot = await getDoc(product);
+    const snapshotData = snapshot.data();
+
+    const data = {
+      pid: snapshot.id,
+      ...snapshotData,
+    };
+
+    setProduct(data);
+  };
+
+  const addProduct = useCallback(
+    (size) => {
+      const timestamp = serverTimestamp();
+
+      dispatch(
+        addProductToCart({
+          added_at: timestamp,
+          description: product?.description,
+          gender: product?.gender,
+          images: product?.images,
+          name: product?.name,
+          price: product?.price,
+          pid: product?.pid,
+          quantity: 1,
+          size,
+        })
+      );
+    },
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [product]
+  );
 
   return (
     <Box component="section" className="c-section-wrapings">
-      <Box className="p-grid__row">
-        <SliderBox>
-          <ImageSwiper />
-        </SliderBox>
-        <Detail>
-          <Typography variant="h3" className="u-text__headline">
-            Product Name
-          </Typography>
-          <Price variant="h4">$ 500.00</Price>
-          <Box className="module-spacer--small" />
-          <SizeTable sizes={['XL', 'L', 'M']} />
-          <Box className="module-spacer--small" />
-        </Detail>
-      </Box>
+      {product ? (
+        <Box className="p-grid__row">
+          <SliderBox>
+            <ImageSwiper images={product?.images} />
+          </SliderBox>
+          <Detail>
+            <Typography variant="h3" className="u-text__headline">
+              {product?.name}
+            </Typography>
+            <Price variant="h4">$ {product?.price.toLocaleString()}</Price>
+            <Box className="module-spacer--small" />
+            <SizeTable sizes={product?.sizes} addProduct={addProduct} />
+            <Box className="module-spacer--small" />
+            <Typography variant="body1">
+              {returnCodeToBr(product?.description)}
+            </Typography>
+          </Detail>
+        </Box>
+      ) : (
+        <CircularProgress />
+      )}
     </Box>
   );
 };

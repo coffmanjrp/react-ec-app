@@ -9,20 +9,20 @@ import {
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-const SizeTable = ({ sizes }) => {
+const SizeTable = ({ sizes, addProduct }) => {
   return (
     <TableContainer>
       <Table>
         <TableBody>
           {sizes.length > 0 &&
             sizes.map((size) => (
-              <TableRow key={size}>
+              <TableRow key={size.size}>
                 <TableCell component="th" scope="row">
-                  {size}
+                  {size.size}
                 </TableCell>
-                <TableCell>Held.</TableCell>
+                <TableCell>Held. {size.quantity}</TableCell>
                 <TableCell sx={classes.iconCell}>
-                  <IconButton>
+                  <IconButton onClick={() => addProduct(size.size)}>
                     <AddShoppingCartIcon />
                   </IconButton>
                 </TableCell>

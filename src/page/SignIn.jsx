@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
-import { signIn } from 'redux/users/usersActions';
+import { signIn } from 'redux/users/actions';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');

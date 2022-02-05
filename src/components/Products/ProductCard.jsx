@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NoImage from 'assets/img/no_image.png';
-import { deleteProduct } from 'redux/products/productsActions';
+import { deleteProduct } from 'redux/products/actions';
 
 const ProductCard = ({ id, name, images, price }) => {
   const [anchorEl, setAnchorEl] = useState(null);

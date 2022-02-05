@@ -10,14 +10,11 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from 'db';
-import {
-  FETCH_PRODUCTS,
-  DELETE_PRODUCT,
-  UPDATE_PRODUCT,
-} from './productsConstants';
+import { FETCH_PRODUCTS, DELETE_PRODUCT, UPDATE_PRODUCT } from './constants';
 
 const productsRef = collection(db, 'products');
 
+// Fetch products collection from firebase
 export const fetchProducts = (gender, category) => async (dispatch) => {
   let q = query(productsRef, orderBy('updated_at', 'desc'));
   q = gender ? query(productsRef, where('gender', '==', gender)) : q;
@@ -34,6 +31,7 @@ export const fetchProducts = (gender, category) => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS, payload: productList });
 };
 
+// Delete product from products collection
 export const deleteProduct = (id) => async (dispatch, getState) => {
   const docRef = await doc(productsRef, id);
 
@@ -45,6 +43,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   dispatch({ type: DELETE_PRODUCT, payload: filterdState });
 };
 
+// Add or Update product to products collection
 export const saveProduct =
   (id, name, description, category, gender, price, images, sizes) =>
   async (dispatch) => {

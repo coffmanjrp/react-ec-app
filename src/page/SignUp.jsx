@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
-import { signUp } from 'redux/users/usersActions';
+import { signUp } from 'redux/users/actions';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');

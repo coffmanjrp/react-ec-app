@@ -1,8 +1,4 @@
-import {
-  FETCH_PRODUCTS,
-  DELETE_PRODUCT,
-  UPDATE_PRODUCT,
-} from './productsConstants';
+import { FETCH_PRODUCTS, DELETE_PRODUCT, UPDATE_PRODUCT } from './constants';
 import initialState from '../store/initialState';
 
 const { products } = initialState;

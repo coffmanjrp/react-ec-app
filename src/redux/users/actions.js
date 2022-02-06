@@ -4,6 +4,7 @@ import {
   setDoc,
   serverTimestamp,
   getDoc,
+  getDocs,
 } from 'firebase/firestore';
 import { auth, db } from 'db';
 import {
@@ -19,13 +20,25 @@ import {
 
 const usersRef = collection(db, 'users');
 
-export const fetchProductsInCart = (products) => async () => ({
-  type: FETCH_PRODUCTS_IN_CART,
-  payload: products,
-});
+// Fetch products in cart list
+export const fetchProductsInCart = () => async (dispatch) => {
+  const uid = auth.currentUser.uid;
+  const userRef = await doc(usersRef, uid);
+  const usersCartRef = await collection(userRef, 'cart');
+
+  const snapshot = await getDocs(usersCartRef);
+
+  const productsInCart = [];
+
+  await snapshot.docs.forEach((doc) => {
+    productsInCart.push({ ...doc.data(), id: doc.id });
+  });
+
+  dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
+};
 
 // Add selelcted product to cart
-export const addProductToCart = (product) => async () => {
+export const addProductToCart = (product) => async (dispatch) => {
   const uid = auth.currentUser.uid;
   const userRef = await doc(usersRef, uid);
   const usersCartRef = await collection(userRef, 'cart');

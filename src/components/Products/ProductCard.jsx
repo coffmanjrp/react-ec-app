@@ -23,10 +23,12 @@ const ProductCard = ({ id, name, images, price }) => {
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
   const handleEdit = () => {
     handleClose();
     navigate(`/product/edit/${id}`);
   };
+
   const handleRemove = (id) => {
     handleClose();
     dispatch(deleteProduct(id));
@@ -45,7 +47,7 @@ const ProductCard = ({ id, name, images, price }) => {
           <Typography variant="body1" color="textSecondary">
             {name}
           </Typography>
-          <Price variant="body1">$ {price}</Price>
+          <Price variant="body1">$ {price.toLocaleString()}</Price>
         </Box>
         <IconButton onClick={handleClick}>
           <MoreVertIcon />

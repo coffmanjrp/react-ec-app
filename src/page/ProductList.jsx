@@ -5,8 +5,8 @@ import { ProductCard } from 'components/Products';
 import { fetchProducts } from 'redux/products/actions';
 
 const ProductList = () => {
-  const { list: products } = useSelector((state) => state.products);
   const dispatch = useDispatch();
+  const { list: products } = useSelector((state) => state.products);
 
   useEffect(() => {
     dispatch(fetchProducts());

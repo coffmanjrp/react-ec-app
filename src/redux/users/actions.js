@@ -5,9 +5,12 @@ import {
   serverTimestamp,
   getDoc,
   getDocs,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 import { auth, db } from 'db';
 import {
+  FETCH_USER,
   FETCH_ORDERS_HISTORY,
   FETCH_PRODUCTS_IN_CART,
   SIGN_IN,
@@ -20,9 +23,23 @@ import {
 
 const usersRef = collection(db, 'users');
 
-// Fetch products in cart list
-export const fetchProductsInCart = () => async (dispatch) => {
+export const fetchUser = () => async (dispatch) => {
   const uid = auth.currentUser.uid;
+
+  const userRef = await doc(usersRef, uid);
+  const snapshot = await getDoc(userRef);
+  const snapshotData = snapshot.data();
+  const data = {
+    ...snapshotData,
+    uid,
+  };
+
+  dispatch({ type: FETCH_USER, payload: data });
+};
+
+// Fetch products in cart list
+export const fetchProductsInCart = () => async (dispatch, getState) => {
+  const uid = getState().users.uid;
   const userRef = await doc(usersRef, uid);
   const usersCartRef = await collection(userRef, 'cart');
 
@@ -37,8 +54,25 @@ export const fetchProductsInCart = () => async (dispatch) => {
   dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
 };
 
+export const fetchOrderHistory = () => async (dispatch, getState) => {
+  const uid = getState().users.uid;
+  const list = [];
+
+  const userRef = await doc(usersRef, uid);
+  const usersOrdersRef = await collection(userRef, 'orders');
+  const q = query(usersOrdersRef, orderBy('updated_at', 'desc'));
+  const snapshots = await getDocs(q);
+
+  await snapshots.forEach((snapshot) => {
+    const data = snapshot.data();
+    list.push(data);
+  });
+
+  dispatch({ type: FETCH_ORDERS_HISTORY, payload: list });
+};
+
 // Add selelcted product to cart
-export const addProductToCart = (product) => async (dispatch) => {
+export const addProductToCart = (product) => async () => {
   const uid = auth.currentUser.uid;
   const userRef = await doc(usersRef, uid);
   const usersCartRef = await collection(userRef, 'cart');

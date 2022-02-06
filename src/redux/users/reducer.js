@@ -1,4 +1,5 @@
 import {
+  FETCH_USER,
   FETCH_ORDERS_HISTORY,
   FETCH_PRODUCTS_IN_CART,
   SIGN_IN,
@@ -10,6 +11,11 @@ const { users } = initialState;
 
 const usersReducer = (state = users, action) => {
   switch (action.type) {
+    case FETCH_USER:
+      return {
+        ...state,
+        ...action.payload,
+      };
     case FETCH_PRODUCTS_IN_CART:
       return {
         ...state,

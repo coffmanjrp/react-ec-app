@@ -11,10 +11,8 @@ const OrderHistoryItem = ({
   shipping_date,
 }) => {
   const price = `$ ${amount.toLocaleString()}`;
-  // const orderedDate = dateTimeToString(updated_at.toDate());
-  // const shippingDate = dateToString(shipping_date.toDate());
-  const orderedDate = updated_at;
-  const shippingDate = shipping_date;
+  const orderedDate = dateTimeToString(updated_at.toDate());
+  const shippingDate = dateToString(shipping_date.toDate());
 
   return (
     <Box>

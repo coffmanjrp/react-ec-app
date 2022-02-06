@@ -1,27 +1,25 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, List } from '@mui/material';
 import { OrderHistoryItem } from 'components/Products';
-import NoImage from 'assets/img/no_image.png';
-
-const mock = {
-  id: 1,
-  products: {
-    id: 1,
-    name: 'Product Name',
-    price: 110000,
-    size: 'xl',
-    image: NoImage,
-  },
-  amount: 110000,
-  updated_at: '10-10-2020',
-  shipping_date: '10-10-2020',
-};
+import { fetchOrderHistory } from 'redux/users/actions';
 
 const OrderHistory = () => {
+  const { orders } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchOrderHistory());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box className="c-section-wrapin">
       <OrderList>
-        <OrderHistoryItem {...mock} />
+        {orders.length > 0 &&
+          orders.map((order) => <OrderHistoryItem key={order.id} {...order} />)}
       </OrderList>
     </Box>
   );

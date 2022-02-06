@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -9,10 +10,9 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { db } from 'db';
-import { auth } from 'db';
 
 const CartListItem = ({ product }) => {
-  const uid = auth.currentUser.uid;
+  const { uid } = useSelector((state) => state.users);
 
   const removeProductFromCart = async (id) => {
     const usersRef = await collection(db, 'users');

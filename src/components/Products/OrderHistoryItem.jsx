@@ -1,18 +1,35 @@
+import { useEffect, useState } from 'react';
 import { Box, Divider } from '@mui/material';
+import { collection, doc, getDoc } from 'firebase/firestore';
 import { OrderedProducts } from 'components/Products';
 import { TextDetail } from 'components/UIkit';
+import { db } from 'db';
 import { dateToString, dateTimeToString } from 'utils';
 
-const OrderHistoryItem = ({
-  id,
-  products,
-  amount,
-  updated_at,
-  shipping_date,
-}) => {
+const OrderHistoryItem = ({ id, products, amount, uid }) => {
+  const [orderedDate, setOrderedDate] = useState(null);
+  const [shippingDate, setShippingDate] = useState(null);
   const price = `$ ${amount.toLocaleString()}`;
-  const orderedDate = dateTimeToString(updated_at.toDate());
-  const shippingDate = dateToString(shipping_date.toDate());
+
+  useEffect(() => {
+    getDates();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getDates = async () => {
+    const usersRef = await collection(db, 'users');
+    const userRef = await doc(usersRef, uid);
+    const ordersRef = await collection(userRef, 'orders');
+    const orderRef = await doc(ordersRef, id);
+    const snapshot = await getDoc(orderRef);
+    const data = snapshot.data();
+    const updated_at = data.updated_at;
+    const shipping_date = data.shipping_date;
+
+    setOrderedDate(dateTimeToString(updated_at.toDate()));
+    setShippingDate(dateToString(shipping_date.toDate()));
+  };
 
   return (
     <Box>

@@ -2,13 +2,12 @@ import {
   collection,
   doc,
   setDoc,
-  serverTimestamp,
   getDoc,
   getDocs,
   query,
   orderBy,
 } from 'firebase/firestore';
-import { auth, db } from 'db';
+import { auth, db, timestamp } from 'db';
 import {
   FETCH_USER,
   FETCH_ORDERS_HISTORY,
@@ -33,6 +32,8 @@ export const fetchUser = () => async (dispatch) => {
     ...snapshotData,
     uid,
   };
+  delete data.created_at;
+  delete data.updated_at;
 
   dispatch({ type: FETCH_USER, payload: data });
 };
@@ -48,7 +49,10 @@ export const fetchProductsInCart = () => async (dispatch, getState) => {
   const productsInCart = [];
 
   await snapshot.docs.forEach((doc) => {
-    productsInCart.push({ ...doc.data(), id: doc.id });
+    const data = doc.data();
+    delete data.added_at;
+
+    productsInCart.push({ ...data, id: doc.id });
   });
 
   dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
@@ -65,6 +69,10 @@ export const fetchOrderHistory = () => async (dispatch, getState) => {
 
   await snapshots.forEach((snapshot) => {
     const data = snapshot.data();
+    delete data.created_at;
+    delete data.updated_at;
+    delete data.shipping_date;
+
     list.push(data);
   });
 
@@ -108,8 +116,6 @@ export const signUp =
 
     if (user) {
       const { uid } = user;
-      const timestamp = serverTimestamp();
-
       const userInitialData = {
         created_at: timestamp,
         email,
@@ -121,6 +127,9 @@ export const signUp =
       const userRef = await doc(usersRef, uid);
 
       await setDoc(userRef, userInitialData);
+
+      delete userInitialData.created_at;
+      delete userInitialData.updated_at;
 
       dispatch({ type: SIGN_UP, payload: userInitialData });
     }

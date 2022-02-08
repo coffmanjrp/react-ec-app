@@ -1,11 +1,33 @@
+import { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Divider, List, Typography } from '@mui/material';
 import { CartListItem } from 'components/Products';
 import { TextDetail } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
-import NoImage from 'assets/img/no_image.png';
+import { orderProduct } from 'redux/products/actions';
 
 const OrderConfirm = () => {
+  const navigate = useNavigate();
+  const { cart: productsInCart } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  const subtotal = useMemo(
+    () => productsInCart.reduce((sum, product) => (sum += product.price), 0),
+    [productsInCart]
+  );
+
+  const shippingFee = subtotal >= 100000 ? 0 : 210;
+  const tax = Math.floor(subtotal * 0.1);
+  const total = Math.floor(subtotal + shippingFee + tax);
+
+  const order = useCallback(() => {
+    dispatch(orderProduct(productsInCart, total));
+
+    navigate('/');
+  }, [productsInCart, total]);
+
   return (
     <Box component="section" className="c-section-wrapin">
       <Typography variant="h4" className="u-text__headline">
@@ -14,16 +36,28 @@ const OrderConfirm = () => {
       <Box className="p-grid__row">
         <DetailBox>
           <List>
-            <CartListItem name="Test" image={NoImage} size="xl" price={1000} />
+            {productsInCart.length > 0 &&
+              productsInCart.map((product) => (
+                <CartListItem key={product.id} product={product} />
+              ))}
           </List>
         </DetailBox>
         <OrderBox>
-          <TextDetail label="Merchandise total" value={`$ ${10000}`} />
-          <TextDetail label="Tax" value={`$ ${10000}`} />
-          <TextDetail label="Postage" value={`$ ${10000}`} />
+          <TextDetail
+            label="Merchandise total"
+            value={`$ ${subtotal.toLocaleString()}`}
+          />
+          <TextDetail label="Tax" value={`$ ${tax.toLocaleString()}`} />
+          <TextDetail
+            label="Postage"
+            value={`$ ${shippingFee.toLocaleString()}`}
+          />
           <Divider />
-          <TextDetail label="Total (including tax)" value={`$ ${10000}`} />
-          <PrimaryButton label="Order Now" />
+          <TextDetail
+            label="Total (including tax)"
+            value={`$ ${total.toLocaleString()}`}
+          />
+          <PrimaryButton label="Order Now" onClick={order} />
         </OrderBox>
       </Box>
     </Box>

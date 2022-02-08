@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { collection, doc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, getDoc } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { ImageSwiper, SizeTable } from 'components/Products';
-import { db } from 'db';
+import { db, timestamp } from 'db';
 import { addProductToCart } from 'redux/users/actions';
 import { returnCodeToBr } from 'utils';
 
@@ -32,8 +32,6 @@ const ProductDetail = () => {
 
   const addProduct = useCallback(
     (size) => {
-      const timestamp = serverTimestamp();
-
       dispatch(
         addProductToCart({
           added_at: timestamp,

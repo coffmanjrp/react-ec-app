@@ -8,22 +8,24 @@ const OrderedProducts = ({ products }) => {
 
   return (
     <List>
-      <ListItem sx={classes.list}>
-        <ListItemAvatar>
-          <ListImage src={products.image} alt="Ordered Product" />
-        </ListItemAvatar>
-        <ListItemTextContainer>
-          <ListItemText
-            primary={products.name}
-            secondary={`Size: ${products.size}`}
+      {products.map((product) => (
+        <ListItem key={product.id} sx={classes.list}>
+          <ListItemAvatar>
+            <ListImage src={product.images[0].path} alt={product.name} />
+          </ListItemAvatar>
+          <ListItemTextContainer>
+            <ListItemText
+              primary={product.name}
+              secondary={`Size: ${product.size}`}
+            />
+            <ListItemText primary={`$ ${product.price}`} />
+          </ListItemTextContainer>
+          <PrimaryButton
+            label="Details"
+            onClick={() => navigate(`/product/${product.id}`)}
           />
-          <ListItemText primary={`$ ${products.price}`} />
-        </ListItemTextContainer>
-        <PrimaryButton
-          label="Details"
-          onClick={() => navigate(`/product/${products.id}`)}
-        />
-      </ListItem>
+        </ListItem>
+      ))}
     </List>
   );
 };

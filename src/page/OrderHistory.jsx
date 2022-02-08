@@ -6,7 +6,7 @@ import { OrderHistoryItem } from 'components/Products';
 import { fetchOrderHistory } from 'redux/users/actions';
 
 const OrderHistory = () => {
-  const { orders } = useSelector((state) => state.users);
+  const { orders, uid } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,7 +19,9 @@ const OrderHistory = () => {
     <Box className="c-section-wrapin">
       <OrderList>
         {orders.length > 0 &&
-          orders.map((order) => <OrderHistoryItem key={order.id} {...order} />)}
+          orders.map((order) => (
+            <OrderHistoryItem key={order.id} {...{ ...order, uid }} />
+          ))}
       </OrderList>
     </Box>
   );

@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
+import { resetPassword } from 'redux/users/actions';
 
 const Reset = () => {
   const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
+
+  const inputEmail = useCallback((e) => setEmail(e.target.value), [setEmail]);
 
   return (
     <Box className="c-section-container">
@@ -22,11 +27,14 @@ const Reset = () => {
         rows={1}
         required={true}
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={inputEmail}
       />
       <Box className="module-spacer--medium" />
       <Box className="center">
-        <PrimaryButton label="Register" onClick={() => console.log({ email })}>
+        <PrimaryButton
+          label="Register"
+          onClick={() => dispatch(resetPassword(email))}
+        >
           Register
         </PrimaryButton>
         <Box className="module-spacer--medium" />

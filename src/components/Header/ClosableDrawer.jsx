@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
+  Box,
   Divider,
   Drawer,
   IconButton,
@@ -30,14 +31,14 @@ const ClosableDrawer = ({ open, onClose }) => {
   );
 
   const handleSignOut = (e) => {
-    onClose(e);
     dispatch(signOut());
+    onClose(e);
 
     setTimeout(() => navigate('/signin'), 1000);
   };
 
   return (
-    <StyledDrawer component="nav">
+    <StyledDrawer>
       <Drawer
         anchor="right"
         open={open}
@@ -55,27 +56,33 @@ const ClosableDrawer = ({ open, onClose }) => {
             value={keyword}
             onChange={inputKeyword}
           />
-          <IconButton>
+          <IconButton onClick={(e) => onClose(e)}>
             <SearchIcon />
           </IconButton>
         </SearchField>
-        <List>
-          {menus.map((menu) => (
-            <ListItem key={menu.id} button onClick={() => navigate(menu.value)}>
-              <ListItemIcon>{menu.icon}</ListItemIcon>
-              <ListItemText primary={menu.label} />
+        <Box onClick={(e) => onClose(e)}>
+          <List>
+            {menus.map((menu) => (
+              <ListItem
+                key={menu.id}
+                button
+                onClick={() => navigate(menu.value)}
+              >
+                <ListItemIcon>{menu.icon}</ListItemIcon>
+                <ListItemText primary={menu.label} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            <ListItem button onClick={handleSignOut}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Sign Out'} />
             </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          <ListItem button onClick={handleSignOut}>
-            <ListItemIcon>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary={'Sign Out'} />
-          </ListItem>
-        </List>
+          </List>
+        </Box>
       </Drawer>
     </StyledDrawer>
   );

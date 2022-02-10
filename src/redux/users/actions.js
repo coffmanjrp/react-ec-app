@@ -17,6 +17,7 @@ import {
 } from './constants';
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 
@@ -168,3 +169,19 @@ export const signIn = (email, password) => async (dispatch) => {
 
 // Sign out user
 export const signOut = () => async () => await auth.signOut();
+
+// Reset password
+export const resetPassword = (email) => async () => {
+  if (email === '') {
+    alert('Required fields are not filled in. Please filled in all fields.');
+    return false;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+
+    alert('Password reset email has been sent.');
+  } catch (error) {
+    alert('There was an error. Please try again.');
+    console.error(error);
+  }
+};

@@ -1,12 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
 import { useAuthStatus } from 'hooks';
+import { Loading } from '../UIkit';
 
 const PrivateRoute = () => {
   const { loggedIn, checkingStatus } = useAuthStatus();
 
   if (checkingStatus) {
-    return <CircularProgress />;
+    return <Loading />;
   }
 
   return loggedIn ? <Outlet /> : <Navigate to="/signin" />;

@@ -32,11 +32,9 @@ const Reset = () => {
       <Box className="module-spacer--medium" />
       <Box className="center">
         <PrimaryButton
-          label="Register"
+          label="Send reset email"
           onClick={() => dispatch(resetPassword(email))}
-        >
-          Register
-        </PrimaryButton>
+        />
         <Box className="module-spacer--medium" />
         <Typography variant="subtitle2">
           <StyledLink to="/signup">Create account</StyledLink>

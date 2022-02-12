@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
+import { setLoading } from 'redux/loading/actions';
 import { signUp } from 'redux/users/actions';
 
 const SignUp = () => {
@@ -16,9 +17,13 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = () => {
+    dispatch(setLoading(true));
     dispatch(signUp(username, email, password, confirmedPassword));
 
-    setTimeout(() => navigate('/'), 1000);
+    setTimeout(() => {
+      navigate('/');
+      dispatch(setLoading(false));
+    }, 1000);
   };
 
   return (

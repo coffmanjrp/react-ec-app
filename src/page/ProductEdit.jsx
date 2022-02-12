@@ -7,6 +7,7 @@ import { ImageArea, SetSizeArea } from 'components/Products';
 import { SelectBox, TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { db } from 'db';
+import { setLoading } from 'redux/loading/actions';
 import { saveProduct } from 'redux/products/actions';
 import { genders, categories } from 'utils/data';
 
@@ -44,11 +45,15 @@ const ProductEdit = () => {
   };
 
   const handleSave = () => {
+    dispatch(setLoading(true));
     dispatch(
       saveProduct(id, name, description, category, gender, price, images, sizes)
     );
 
-    setTimeout(() => navigate('/'), 1000);
+    setTimeout(() => {
+      navigate('/');
+      dispatch(setLoading(false));
+    }, 1000);
   };
 
   return (

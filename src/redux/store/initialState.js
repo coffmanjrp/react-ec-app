@@ -9,6 +9,7 @@ const initialState = {
     uid: '',
     username: '',
   },
+  loading: false,
 };
 
 export default initialState;

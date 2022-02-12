@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { PrivateRoute } from 'components/Auth';
 import { Header } from 'components/Header';
+import { Loading } from 'components/UIkit';
 import {
   CartList,
   OrderConfirm,
@@ -13,11 +14,15 @@ import {
   SignIn,
   SignUp,
 } from 'page';
+import { useSelector } from 'react-redux';
 
 const App = () => {
+  const { loading } = useSelector((state) => state);
+
   return (
     <Main>
       <Router>
+        {loading && <Loading />}
         <Header />
         <Routes>
           <Route path="/signup" element={<SignUp />} />

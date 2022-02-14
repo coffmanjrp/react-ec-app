@@ -1,3 +1,4 @@
+import { push } from 'redux-first-history';
 import {
   collection,
   doc,
@@ -20,6 +21,8 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import { setLoading } from '../loading/actions';
+import { setErrorMessage } from '../error/actions';
 
 const usersRef = collection(db, 'users');
 
@@ -99,12 +102,10 @@ export const signUp =
       password === '' ||
       confirmedPassword === ''
     ) {
-      alert('Required fields are not filled in.');
       return false;
     }
 
     if (password !== confirmedPassword) {
-      alert('Passwords do not match. Please try again.');
       return false;
     }
 
@@ -138,32 +139,46 @@ export const signUp =
 
 // Sign in user
 export const signIn = (email, password) => async (dispatch) => {
-  if (email === '' || password === '') {
-    alert('Required fields are not filled in. Please filled in all fields.');
-    return false;
-  }
+  try {
+    if (email === '' || password === '') {
+      dispatch(
+        setErrorMessage(
+          'Required fields are not filled in. Please filled in all fields.'
+        )
+      );
+      return false;
+    }
 
-  const userCredentials = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const user = userCredentials.user;
+    const userCredentials = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredentials.user;
 
-  if (user) {
-    const { uid } = user;
+    if (user) {
+      dispatch(setErrorMessage(''));
+      dispatch(setLoading(true));
 
-    const userRef = await doc(usersRef, uid);
-    const snapshot = await getDoc(userRef);
-    const data = snapshot.data();
+      const { uid } = user;
 
-    const userData = {
-      role: data.role,
-      uid,
-      username: data.username,
-    };
+      const userRef = await doc(usersRef, uid);
+      const snapshot = await getDoc(userRef);
+      const data = snapshot.data();
 
-    dispatch({ type: SIGN_IN, payload: userData });
+      const userData = {
+        role: data.role,
+        uid,
+        username: data.username,
+      };
+
+      dispatch(setLoading(false));
+      dispatch(push('/'));
+      dispatch({ type: SIGN_IN, payload: userData });
+    }
+  } catch (error) {
+    dispatch(setErrorMessage('Invalid Email or Password'));
+    console.error(error);
   }
 };
 
@@ -173,15 +188,11 @@ export const signOut = () => async () => await auth.signOut();
 // Reset password
 export const resetPassword = (email) => async () => {
   if (email === '') {
-    alert('Required fields are not filled in. Please filled in all fields.');
     return false;
   }
   try {
     await sendPasswordResetEmail(auth, email);
-
-    alert('Password reset email has been sent.');
   } catch (error) {
-    alert('There was an error. Please try again.');
     console.error(error);
   }
 };

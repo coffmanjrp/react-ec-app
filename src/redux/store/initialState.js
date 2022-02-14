@@ -10,6 +10,9 @@ const initialState = {
     username: '',
   },
   loading: false,
+  error: {
+    message: '',
+  },
 };
 
 export default initialState;

@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { HistoryRouter as Router } from 'redux-first-history/rr6';
 import { styled } from '@mui/material/styles';
 import { PrivateRoute } from 'components/Auth';
 import { Header } from 'components/Header';
@@ -14,14 +16,14 @@ import {
   SignIn,
   SignUp,
 } from 'page';
-import { useSelector } from 'react-redux';
+import { history } from 'redux/store/store';
 
 const App = () => {
   const { loading } = useSelector((state) => state);
 
   return (
     <Main>
-      <Router>
+      <Router history={history}>
         {loading && <Loading />}
         <Header />
         <Routes>

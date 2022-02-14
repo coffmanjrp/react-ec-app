@@ -45,15 +45,9 @@ const ProductEdit = () => {
   };
 
   const handleSave = () => {
-    dispatch(setLoading(true));
     dispatch(
       saveProduct(id, name, description, category, gender, price, images, sizes)
     );
-
-    setTimeout(() => {
-      navigate('/');
-      dispatch(setLoading(false));
-    }, 1000);
   };
 
   return (

@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import { TextInput } from 'components/UIkit';
+import { TextInput, Toast } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
-import { setLoading } from 'redux/loading/actions';
 import { signUp } from 'redux/users/actions';
 
 const SignUp = () => {
@@ -13,21 +12,22 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
-  const navigate = useNavigate();
+  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
+  const { type, message } = useSelector((state) => state.alert);
+
+  useEffect(() => {
+    setToast(Boolean(message));
+
+    return () => setToast(false);
+  }, [message]);
 
   const handleSignUp = () => {
-    dispatch(setLoading(true));
     dispatch(signUp(username, email, password, confirmedPassword));
-
-    setTimeout(() => {
-      navigate('/');
-      dispatch(setLoading(false));
-    }, 1000);
   };
 
   return (
-    <Box className="c-section-container">
+    <Box component="form" className="c-section-container">
       <Typography variant="h4" className="u-text__headline u-text-center">
         Account registration
       </Typography>
@@ -85,6 +85,7 @@ const SignUp = () => {
           <StyledLink to="/signin">SignIn page</StyledLink>
         </Typography>
       </Box>
+      <Toast {...{ type, message, open: toast, onClose: setToast }} />
     </Box>
   );
 };

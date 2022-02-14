@@ -10,7 +10,8 @@ const initialState = {
     username: '',
   },
   loading: false,
-  error: {
+  alert: {
+    type: '',
     message: '',
   },
 };

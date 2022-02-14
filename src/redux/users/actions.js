@@ -21,8 +21,8 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import { setAlert } from '../alert/actions';
 import { setLoading } from '../loading/actions';
-import { setErrorMessage } from '../error/actions';
 
 const usersRef = collection(db, 'users');
 
@@ -102,10 +102,12 @@ export const signUp =
       password === '' ||
       confirmedPassword === ''
     ) {
+      dispatch(setAlert('error', 'Required fields are not filled in.'));
       return false;
     }
 
     if (password !== confirmedPassword) {
+      dispatch(setAlert('error', 'Passwords do not match. Please try again.'));
       return false;
     }
 
@@ -117,6 +119,9 @@ export const signUp =
     const user = userCredentials.user;
 
     if (user) {
+      dispatch(setAlert('info', ''));
+      dispatch(setLoading(true));
+
       const { uid } = user;
       const userInitialData = {
         created_at: timestamp,
@@ -133,6 +138,8 @@ export const signUp =
       delete userInitialData.created_at;
       delete userInitialData.updated_at;
 
+      dispatch(push('/'));
+      dispatch(setLoading(false));
       dispatch({ type: SIGN_UP, payload: userInitialData });
     }
   };
@@ -142,7 +149,8 @@ export const signIn = (email, password) => async (dispatch) => {
   try {
     if (email === '' || password === '') {
       dispatch(
-        setErrorMessage(
+        setAlert(
+          'error',
           'Required fields are not filled in. Please filled in all fields.'
         )
       );
@@ -157,7 +165,7 @@ export const signIn = (email, password) => async (dispatch) => {
     const user = userCredentials.user;
 
     if (user) {
-      dispatch(setErrorMessage(''));
+      dispatch(setAlert('info', ''));
       dispatch(setLoading(true));
 
       const { uid } = user;
@@ -172,27 +180,51 @@ export const signIn = (email, password) => async (dispatch) => {
         username: data.username,
       };
 
-      dispatch(setLoading(false));
       dispatch(push('/'));
+      dispatch(setLoading(false));
       dispatch({ type: SIGN_IN, payload: userData });
     }
   } catch (error) {
-    dispatch(setErrorMessage('Invalid Email or Password'));
+    dispatch(setAlert('error', 'Invalid Email or Password'));
     console.error(error);
   }
 };
 
 // Sign out user
-export const signOut = () => async () => await auth.signOut();
+export const signOut = () => async (dispatch) => {
+  dispatch(setLoading(true));
+
+  await auth.signOut();
+  dispatch(push('/signin'));
+  dispatch(setLoading(false));
+};
 
 // Reset password
-export const resetPassword = (email) => async () => {
-  if (email === '') {
-    return false;
-  }
+export const resetPassword = (email) => async (dispatch) => {
   try {
+    if (email === '') {
+      dispatch(
+        setAlert(
+          'error',
+          'Required fields are not filled in. Please filled in all fields.'
+        )
+      );
+      return false;
+    }
+
     await sendPasswordResetEmail(auth, email);
+    dispatch(setAlert('success', 'Password reset email has been sent!'));
+
+    setTimeout(() => {
+      dispatch(push('/signin'));
+    }, 5000);
   } catch (error) {
+    dispatch(
+      setAlert(
+        'error',
+        'Something went wrong. Please try again later or contact us.'
+      )
+    );
     console.error(error);
   }
 };

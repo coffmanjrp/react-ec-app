@@ -1,3 +1,4 @@
+import { push } from 'redux-first-history';
 import {
   collection,
   doc,
@@ -14,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import { db, timestamp } from 'db';
 import { FETCH_PRODUCTS, DELETE_PRODUCT, UPDATE_PRODUCT } from './constants';
+import { setLoading } from '../loading/actions';
 
 const productsRef = collection(db, 'products');
 
@@ -54,6 +56,8 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 export const saveProduct =
   (id, name, description, category, gender, price, images, sizes) =>
   async (dispatch) => {
+    dispatch(setLoading(true));
+
     const data = {
       name,
       description,
@@ -76,6 +80,8 @@ export const saveProduct =
 
     delete data.updated_at;
 
+    dispatch(setLoading(false));
+    dispatch(push('/'));
     dispatch({ type: UPDATE_PRODUCT, payload: data });
   };
 

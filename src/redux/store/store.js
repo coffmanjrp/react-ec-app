@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { createReduxHistoryContext } from 'redux-first-history';
 import { createBrowserHistory } from 'history';
-import errorReducer from '../error/reducer';
+import alertReducer from '../alert/reducer';
 import loadingReducer from '../loading/reducer';
 import productsReducer from '../products/reducer';
 import usersReducer from '../users/reducer';
@@ -13,7 +13,7 @@ const { createReduxHistory, routerMiddleware, routerReducer } =
 export const store = configureStore({
   reducer: combineReducers({
     router: routerReducer,
-    error: errorReducer,
+    alert: alertReducer,
     loading: loadingReducer,
     products: productsReducer,
     users: usersReducer,

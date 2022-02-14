@@ -1,20 +1,32 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import { TextInput } from 'components/UIkit';
+import { TextInput, Toast } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { resetPassword } from 'redux/users/actions';
 
 const Reset = () => {
   const [email, setEmail] = useState('');
+  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
+  const { type, message } = useSelector((state) => state.alert);
+
+  useEffect(() => {
+    setToast(Boolean(message));
+
+    return () => setToast(false);
+  }, [message]);
 
   const inputEmail = useCallback((e) => setEmail(e.target.value), [setEmail]);
 
+  const handleReset = () => {
+    dispatch(resetPassword(email));
+  };
+
   return (
-    <Box className="c-section-container">
+    <Box component="form" className="c-section-container">
       <Typography variant="h4" className="u-text__headline u-text-center">
         Reset your password
       </Typography>
@@ -31,10 +43,7 @@ const Reset = () => {
       />
       <Box className="module-spacer--medium" />
       <Box className="center">
-        <PrimaryButton
-          label="Send reset email"
-          onClick={() => dispatch(resetPassword(email))}
-        />
+        <PrimaryButton label="Send reset email" onClick={handleReset} />
         <Box className="module-spacer--medium" />
         <Typography variant="subtitle2">
           <StyledLink to="/signup">Create account</StyledLink>
@@ -43,6 +52,7 @@ const Reset = () => {
           <StyledLink to="/signin">SignIn page</StyledLink>
         </Typography>
       </Box>
+      <Toast {...{ type, message, open: toast, onClose: setToast }} />
     </Box>
   );
 };

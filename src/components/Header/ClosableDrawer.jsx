@@ -15,7 +15,6 @@ import {
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SearchIcon from '@mui/icons-material/Search';
 import { TextInput } from '../UIkit';
-import { setLoading } from 'redux/loading/actions';
 import { signOut } from 'redux/users/actions';
 import { menus } from 'utils/data';
 
@@ -32,13 +31,7 @@ const ClosableDrawer = ({ open, onClose }) => {
   );
 
   const handleSignOut = () => {
-    dispatch(setLoading(true));
     dispatch(signOut());
-
-    setTimeout(() => {
-      navigate('/signin');
-      dispatch(setLoading(false));
-    }, 1000);
   };
 
   return (

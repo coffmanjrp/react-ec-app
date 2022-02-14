@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { TextInput, Toast } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { signIn } from 'redux/users/actions';
@@ -11,6 +13,7 @@ import { useEffect } from 'react';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
   const { type, message } = useSelector((state) => state.alert);
@@ -41,16 +44,23 @@ const SignIn = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <TextInput
-        type="password"
-        label="Enter your password"
-        fullWidth={true}
-        multiline={false}
-        rows={1}
-        required={true}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <Box sx={{ position: 'relative' }}>
+        <TextInput
+          type={showPassword ? 'text' : 'password'}
+          label="Enter your password"
+          fullWidth={true}
+          multiline={false}
+          rows={1}
+          required={true}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <ShowPasswordButton
+          onClick={() => setShowPassword((prevState) => !prevState)}
+        >
+          {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+        </ShowPasswordButton>
+      </Box>
       <Box className="module-spacer--medium" />
       <Box className="center">
         <PrimaryButton label="Sign In" onClick={handleSignIn}>
@@ -73,5 +83,12 @@ const StyledLink = styled(Link)(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: 'none',
 }));
+
+const ShowPasswordButton = styled(IconButton)({
+  position: 'absolute',
+  top: '55%',
+  right: '0',
+  transform: 'translateY(-50%)',
+});
 
 export default SignIn;

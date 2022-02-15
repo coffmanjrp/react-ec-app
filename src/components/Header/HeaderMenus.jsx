@@ -2,17 +2,22 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
+import { styled } from '@mui/material/styles';
 import { Badge, IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { db } from 'db';
-import { fetchProductsInCart } from 'redux/users/actions';
+import { fetchProductsInCart, signOut } from 'redux/users/actions';
+import { UserAvatar } from '../UIkit';
 
 const HeaderMenus = ({ handleDrawerToggle }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { cart: productsInCart, uid } = useSelector((state) => state.users);
+  const {
+    cart: productsInCart,
+    username,
+    uid,
+  } = useSelector((state) => state.users);
 
   useEffect(() => {
     unsubscribe();
@@ -21,6 +26,10 @@ const HeaderMenus = ({ handleDrawerToggle }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSignOut = () => {
+    dispatch(signOut());
+  };
 
   const unsubscribe = async () => {
     const usersRef = await collection(db, 'users');
@@ -54,20 +63,26 @@ const HeaderMenus = ({ handleDrawerToggle }) => {
   };
 
   return (
-    <>
+    <FlexBox>
       <IconButton onClick={() => navigate('/cart')}>
         <Badge badgeContent={productsInCart.length} color="secondary">
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
-      <IconButton>
-        <FavoriteBorderIcon />
+      <IconButton onClick={handleSignOut}>
+        <UserAvatar username={username} />
       </IconButton>
       <IconButton onClick={(e) => handleDrawerToggle(e)}>
         <MenuIcon />
       </IconButton>
-    </>
+    </FlexBox>
   );
 };
+
+const FlexBox = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
 export default HeaderMenus;

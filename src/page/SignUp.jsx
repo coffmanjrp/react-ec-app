@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
@@ -10,14 +10,17 @@ import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { signUp } from 'redux/users/actions';
 
 const SignUp = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmedPassword, setConfirmedPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmedPassword: '',
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
   const { type, message } = useSelector((state) => state.alert);
+  const { username, email, password, confirmedPassword } = formData;
 
   useEffect(() => {
     setToast(Boolean(message));
@@ -29,6 +32,15 @@ const SignUp = () => {
     dispatch(signUp(username, email, password, confirmedPassword));
   };
 
+  const handleChange = useCallback(
+    (e) =>
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,
+      })),
+    [setFormData]
+  );
+
   return (
     <Box component="form" className="c-section-container">
       <Typography variant="h4" className="u-text__headline u-text-center">
@@ -37,34 +49,37 @@ const SignUp = () => {
       <Box className="module-spacer--medium" />
       <TextInput
         type="text"
+        name="username"
         label="Username"
         fullWidth={true}
         multiline={false}
         rows={1}
         required={true}
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={handleChange}
       />
       <TextInput
         type="email"
+        name="email"
         label="Email"
         fullWidth={true}
         multiline={false}
         rows={1}
         required={true}
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={handleChange}
       />
       <Box sx={{ position: 'relative' }}>
         <TextInput
           type={showPassword ? 'text' : 'password'}
+          name="password"
           label="Enter your password"
           fullWidth={true}
           multiline={false}
           rows={1}
           required={true}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChange}
         />
         <ShowPasswordButton
           onClick={() => setShowPassword((prevState) => !prevState)}
@@ -74,13 +89,14 @@ const SignUp = () => {
       </Box>
       <TextInput
         type="password"
+        name="confirmedPassword"
         label="Re-enter your password"
         fullWidth={true}
         multiline={false}
         rows={1}
         required={true}
         value={confirmedPassword}
-        onChange={(e) => setConfirmedPassword(e.target.value)}
+        onChange={handleChange}
       />
       <Box className="module-spacer--medium" />
       <Box className="center">

@@ -15,6 +15,7 @@ import {
 } from 'firebase/firestore';
 import { db, timestamp } from 'db';
 import { FETCH_PRODUCTS, DELETE_PRODUCT, UPDATE_PRODUCT } from './constants';
+import { setAlert } from '../alert/actions';
 import { setLoading } from '../loading/actions';
 
 const productsRef = collection(db, 'products');
@@ -54,11 +55,12 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 
 // Add or Update product to products collection
 export const saveProduct =
-  (id, name, description, category, gender, price, images, sizes) =>
+  (id, uid, name, description, category, gender, price, images, sizes) =>
   async (dispatch) => {
     dispatch(setLoading(true));
 
-    const data = {
+    let data = {
+      uid,
       name,
       description,
       category,
@@ -69,15 +71,28 @@ export const saveProduct =
       updated_at: timestamp,
     };
 
-    const docRef = await doc(productsRef, id);
+    if (id) {
+      const docRef = await doc(productsRef, id);
 
-    if (id === '') {
-      data.id = docRef.id;
-      data.created_at = timestamp;
+      if (id === '') {
+        data.id = docRef.id;
+        data.created_at = timestamp;
+      }
+
+      await updateDoc(docRef, data);
+    } else {
+      const snapshot = await doc(productsRef);
+
+      data = {
+        ...data,
+        id: snapshot.id,
+        created_at: timestamp,
+      };
+
+      await setDoc(snapshot, data);
     }
 
-    await updateDoc(docRef, data);
-
+    delete data.created_at;
     delete data.updated_at;
 
     dispatch(setLoading(false));
@@ -86,80 +101,81 @@ export const saveProduct =
   };
 
 // Order product process
-export const orderProduct = (productsInCart, amount) => async (getState) => {
-  try {
-    const uid = getState().users.uid;
-    const usersRef = await collection(db, 'users');
-    const userRef = await doc(usersRef, uid);
-    const usersCartsRef = await collection(userRef, 'cart');
-    let products = [];
-    let soldOutProducts = [];
-    const batch = await writeBatch(db);
+export const orderProduct =
+  (productsInCart, amount) => async (dispatch, getState) => {
+    try {
+      const uid = getState().users.uid;
+      const usersRef = await collection(db, 'users');
+      const userRef = await doc(usersRef, uid);
+      const usersCartsRef = await collection(userRef, 'cart');
+      let products = [];
+      let soldOutProducts = [];
+      const batch = await writeBatch(db);
 
-    for (const product of productsInCart) {
-      const productRef = await doc(productsRef, product.pid);
-      const snapshot = await getDoc(productRef);
-      const sizes = snapshot.data().sizes;
+      for (const product of productsInCart) {
+        const productRef = await doc(productsRef, product.pid);
+        const snapshot = await getDoc(productRef);
+        const sizes = snapshot.data().sizes;
 
-      const updatedSizes = sizes.map((size) => {
-        if (size.size === product.size) {
-          if (size.quantity === 0) {
-            soldOutProducts.push(product.name);
+        const updatedSizes = sizes.map((size) => {
+          if (size.size === product.size) {
+            if (size.quantity === 0) {
+              soldOutProducts.push(product.name);
+              return size;
+            }
+            return {
+              size: size.size,
+              quantity: size.quantity - 1,
+            };
+          } else {
             return size;
           }
-          return {
-            size: size.size,
-            quantity: size.quantity - 1,
-          };
-        } else {
-          return size;
-        }
-      });
+        });
 
-      products.push({
-        id: product.pid,
-        images: product.images,
-        name: product.name,
-        price: product.price,
-        size: product.size,
-      });
+        products.push({
+          id: product.pid,
+          images: product.images,
+          name: product.name,
+          price: product.price,
+          size: product.size,
+        });
 
-      await batch.update(productRef, { sizes: updatedSizes });
-      await batch.delete(doc(usersCartsRef, product.id));
-    }
+        await batch.update(productRef, { sizes: updatedSizes });
+        await batch.delete(doc(usersCartsRef, product.id));
+      }
 
-    if (soldOutProducts.length > 0) {
-      const errorMessage =
-        soldOutProducts.length > 1
-          ? soldOutProducts.join('and')
-          : soldOutProducts[0];
-      alert(
-        `We are very sorry. The order process has been suspended because the ${errorMessage} are no longer in stock.`
+      if (soldOutProducts.length > 0) {
+        const errorMessage =
+          soldOutProducts.length > 1
+            ? soldOutProducts.join('and')
+            : soldOutProducts[0];
+        alert(
+          `We are very sorry. The order process has been suspended because the ${errorMessage} are no longer in stock.`
+        );
+      }
+
+      await batch.commit();
+
+      const ordersRef = await collection(userRef, 'orders');
+      const orderDoc = await doc(ordersRef);
+      const date = timestamp.toDate();
+      const shippingDate = Timestamp.fromDate(
+        new Date(date.setDate(date.getDate() + 3))
       );
+
+      const history = {
+        amount,
+        created_at: timestamp,
+        id: orderDoc.id,
+        products,
+        shipping_date: shippingDate,
+        updated_at: timestamp,
+      };
+
+      await setDoc(orderDoc, history);
+    } catch (error) {
+      dispatch(setAlert('error', 'Order processing failed.'));
+      console.error(error);
+      return false;
     }
-
-    await batch.commit();
-
-    const ordersRef = await collection(userRef, 'orders');
-    const orderDoc = await doc(ordersRef);
-    const date = timestamp.toDate();
-    const shippingDate = Timestamp.fromDate(
-      new Date(date.setDate(date.getDate() + 3))
-    );
-
-    const history = {
-      amount,
-      created_at: timestamp,
-      id: orderDoc.id,
-      products,
-      shipping_date: shippingDate,
-      updated_at: timestamp,
-    };
-
-    await setDoc(orderDoc, history);
-  } catch (error) {
-    alert('Order processing failed.');
-    console.error(error);
-    return false;
-  }
-};
+  };

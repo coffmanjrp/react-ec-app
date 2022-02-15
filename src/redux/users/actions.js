@@ -15,6 +15,7 @@ import {
   FETCH_PRODUCTS_IN_CART,
   SIGN_IN,
   SIGN_UP,
+  SIGN_OUT,
 } from './constants';
 import {
   createUserWithEmailAndPassword,
@@ -197,6 +198,8 @@ export const signOut = () => async (dispatch) => {
   await auth.signOut();
   dispatch(push('/signin'));
   dispatch(setLoading(false));
+
+  dispatch({ type: SIGN_OUT });
 };
 
 // Reset password

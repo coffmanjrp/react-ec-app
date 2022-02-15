@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography } from '@mui/material';
 import { doc, getDoc } from 'firebase/firestore';
 import { ImageArea, SetSizeArea } from 'components/Products';
 import { SelectBox, TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { db } from 'db';
-import { setLoading } from 'redux/loading/actions';
 import { saveProduct } from 'redux/products/actions';
 import { genders, categories } from 'utils/data';
 
@@ -15,21 +14,21 @@ const ProductEdit = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  // const [categories, setCategories] = useState([]);
   const [gender, setGender] = useState('');
   const [price, setPrice] = useState('');
   const [images, setImages] = useState([]);
   const [sizes, setSizes] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { uid } = useSelector((state) => state.users);
 
   useEffect(() => {
     fetchProduct(id);
   }, [id]);
 
   const fetchProduct = async (id) => {
-    if (id !== '') {
+    if (id) {
       const docRef = await doc(db, 'products', id);
       const product = await getDoc(docRef);
       const data = product.data();
@@ -46,7 +45,17 @@ const ProductEdit = () => {
 
   const handleSave = () => {
     dispatch(
-      saveProduct(id, name, description, category, gender, price, images, sizes)
+      saveProduct(
+        id,
+        uid,
+        name,
+        description,
+        category,
+        gender,
+        price,
+        images,
+        sizes
+      )
     );
   };
 

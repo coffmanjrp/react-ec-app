@@ -8,6 +8,7 @@ const initialState = {
     role: '',
     uid: '',
     username: '',
+    email: '',
   },
   loading: false,
   alert: {

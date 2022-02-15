@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -16,10 +16,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NoImage from 'assets/img/no_image.png';
 import { deleteProduct } from 'redux/products/actions';
 
-const ProductCard = ({ id, name, images, price }) => {
+const ProductCard = ({ id, uid, name, images, price }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { uid: usersId } = useSelector((state) => state.users);
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -49,17 +50,21 @@ const ProductCard = ({ id, name, images, price }) => {
           </Typography>
           <Price variant="body1">$ {price.toLocaleString()}</Price>
         </Box>
-        <IconButton onClick={handleClick}>
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClick={handleClose}
-        >
-          <MenuItem onClick={handleEdit}>Edit</MenuItem>
-          <MenuItem onClick={() => handleRemove(id)}>Remove</MenuItem>
-        </Menu>
+        {usersId === uid && (
+          <>
+            <IconButton onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClick={handleClose}
+            >
+              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+              <MenuItem onClick={() => handleRemove(id)}>Remove</MenuItem>
+            </Menu>
+          </>
+        )}
       </CardContent>
     </ProductCardRoot>
   );

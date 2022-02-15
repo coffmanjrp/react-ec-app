@@ -1,13 +1,13 @@
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { AppBar, Box, Toolbar } from '@mui/material';
 import { ClosableDrawer, HeaderMenus } from '.';
-import { useAuthStatus } from 'hooks';
 import logo from 'assets/img/logo.png';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const { loggedIn, checkingStatus } = useAuthStatus();
+  const { uid } = useSelector((state) => state.users);
 
   const handleDrawerToggle = useCallback(
     (e) => {
@@ -27,7 +27,7 @@ const Header = () => {
           <Link to="/">
             <img src={logo} alt="Logo" width="128px" />
           </Link>
-          {loggedIn && !checkingStatus && (
+          {uid && (
             <Box sx={classes.iconButtons}>
               <HeaderMenus handleDrawerToggle={handleDrawerToggle} />
             </Box>

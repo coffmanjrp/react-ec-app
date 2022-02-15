@@ -4,6 +4,7 @@ import {
   FETCH_PRODUCTS_IN_CART,
   SIGN_IN,
   SIGN_UP,
+  SIGN_OUT,
 } from './constants';
 import initialState from '../store/initialState';
 
@@ -32,6 +33,17 @@ const usersReducer = (state = users, action) => {
         ...state,
         ...action.payload,
       };
+    case SIGN_OUT: {
+      return {
+        ...state,
+        cart: [],
+        orders: [],
+        role: '',
+        uid: '',
+        username: '',
+        email: '',
+      };
+    }
     default:
       return state;
   }

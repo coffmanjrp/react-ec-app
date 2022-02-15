@@ -6,11 +6,16 @@ const { products } = initialState;
 const productsReducer = (state = products, action) => {
   switch (action.type) {
     case FETCH_PRODUCTS:
-    case DELETE_PRODUCT:
-    case UPDATE_PRODUCT: {
+    case DELETE_PRODUCT: {
       return {
         ...state,
         list: [...action.payload],
+      };
+    }
+    case UPDATE_PRODUCT: {
+      return {
+        ...state,
+        list: [...state.list, action.payload],
       };
     }
     default:

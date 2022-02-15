@@ -23,11 +23,11 @@ const UserAvatar = ({ username }) => {
         bgcolor: stringToColor(username),
         width: 24,
         height: 24,
-        fontSize: 16,
+        fontSize: 14.5,
       }}
     >
       {username[0]?.toUpperCase()}
-      {username[1]?.toLowerCase()}
+      {username[1]?.toUpperCase()}
     </Avatar>
   );
 };

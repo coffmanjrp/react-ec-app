@@ -56,7 +56,7 @@ const SetSizeArea = ({ sizes, setSizes }) => {
   };
 
   const deleteSize = (deleteIndex) => {
-    const filterdSizes = sizes.filter((item, index) => index !== deleteIndex);
+    const filterdSizes = sizes.filter((_, index) => index !== deleteIndex);
     setSizes(filterdSizes);
   };
 

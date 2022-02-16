@@ -1,23 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
-import { TextInput, Toast } from 'components/UIkit';
+import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { resetPassword } from 'redux/users/actions';
 
 const Reset = () => {
   const [email, setEmail] = useState('');
-  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
-  const { type, message } = useSelector((state) => state.alert);
-
-  useEffect(() => {
-    setToast(Boolean(message));
-
-    return () => setToast(false);
-  }, [message]);
 
   const inputEmail = useCallback((e) => setEmail(e.target.value), [setEmail]);
 
@@ -52,7 +44,6 @@ const Reset = () => {
           <StyledLink to="/signin">SignIn page</StyledLink>
         </Typography>
       </Box>
-      <Toast {...{ type, message, open: toast, onClose: setToast }} />
     </Box>
   );
 };

@@ -34,8 +34,8 @@ const HeaderMenus = ({ handleDrawerToggle }) => {
   const unsubscribe = async () => {
     const usersRef = await collection(db, 'users');
     const userRef = await doc(usersRef, uid);
-    const usersCartRef = await collection(userRef, 'cart');
-    const unsub = await onSnapshot(usersCartRef, (snapshots) => {
+    const userCartRef = await collection(userRef, 'cart');
+    const unsub = await onSnapshot(userCartRef, (snapshots) => {
       snapshots.docChanges().forEach((change) => {
         const product = change.doc.data();
         const changeType = change.type;
@@ -57,6 +57,7 @@ const HeaderMenus = ({ handleDrawerToggle }) => {
             break;
         }
       });
+
       dispatch(fetchProductsInCart(productsInCart));
     });
     return unsub;

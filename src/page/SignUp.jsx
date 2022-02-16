@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, IconButton, Typography } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { TextInput, Toast } from 'components/UIkit';
+import { TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { signUp } from 'redux/users/actions';
 
@@ -17,16 +17,8 @@ const SignUp = () => {
     confirmedPassword: '',
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [toast, setToast] = useState(false);
   const dispatch = useDispatch();
-  const { type, message } = useSelector((state) => state.alert);
   const { username, email, password, confirmedPassword } = formData;
-
-  useEffect(() => {
-    setToast(Boolean(message));
-
-    return () => setToast(false);
-  }, [message]);
 
   const handleSignUp = () => {
     dispatch(signUp(username, email, password, confirmedPassword));
@@ -111,7 +103,6 @@ const SignUp = () => {
           <StyledLink to="/signin">SignIn page</StyledLink>
         </Typography>
       </Box>
-      <Toast {...{ type, message, open: toast, onClose: setToast }} />
     </Box>
   );
 };

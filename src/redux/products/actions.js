@@ -22,82 +22,109 @@ const productsRef = collection(db, 'products');
 
 // Fetch products collection from firebase
 export const fetchProducts = (gender, category) => async (dispatch) => {
-  let q = query(productsRef, orderBy('updated_at', 'desc'));
-  q = gender ? query(productsRef, where('gender', '==', gender)) : q;
-  q = category ? query(where('category', '==', category)) : q;
+  try {
+    dispatch(setLoading(true));
+    let q = query(productsRef, orderBy('updated_at', 'desc'));
+    q = gender ? query(productsRef, where('gender', '==', gender)) : q;
+    q = category ? query(where('category', '==', category)) : q;
 
-  const snapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
-  const productList = [];
+    const productList = [];
 
-  await snapshot.docs.forEach((doc) => {
-    const data = doc.data();
-    delete data.created_at;
-    delete data.updated_at;
+    await snapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      delete data.created_at;
+      delete data.updated_at;
 
-    productList.push({ ...data, id: doc.id });
-  });
+      productList.push({ ...data, id: doc.id });
+    });
 
-  dispatch({ type: FETCH_PRODUCTS, payload: productList });
+    dispatch(setLoading(false));
+    dispatch({ type: FETCH_PRODUCTS, payload: productList });
+  } catch (error) {
+    dispatch(setAlert('error', 'Faild fetching products'));
+    console.error(error);
+    return false;
+  }
 };
 
 // Delete product from products collection
 export const deleteProduct = (id) => async (dispatch, getState) => {
-  const docRef = await doc(productsRef, id);
+  try {
+    dispatch(setLoading(true));
+    const docRef = await doc(productsRef, id);
 
-  await deleteDoc(docRef);
+    await deleteDoc(docRef);
 
-  const productState = getState().products.list;
-  const filterdState = productState.filter((product) => product.id !== id);
+    const productState = getState().products.list;
+    const filterdState = productState.filter((product) => product.id !== id);
 
-  dispatch({ type: DELETE_PRODUCT, payload: filterdState });
+    dispatch(setLoading(false));
+    dispatch({ type: DELETE_PRODUCT, payload: filterdState });
+  } catch (error) {
+    dispatch(setAlert('error', 'Something went wrong. Try again later.'));
+    console.error(error);
+    return false;
+  }
 };
 
 // Add or Update product to products collection
 export const saveProduct =
   (id, uid, name, description, category, gender, price, images, sizes) =>
   async (dispatch) => {
-    dispatch(setLoading(true));
+    try {
+      dispatch(setLoading(true));
 
-    let data = {
-      uid,
-      name,
-      description,
-      category,
-      gender,
-      price: parseInt(price, 10),
-      images,
-      sizes,
-      updated_at: timestamp,
-    };
-
-    if (id) {
-      const docRef = await doc(productsRef, id);
-
-      if (id === '') {
-        data.id = docRef.id;
-        data.created_at = timestamp;
-      }
-
-      await updateDoc(docRef, data);
-    } else {
-      const snapshot = await doc(productsRef);
-
-      data = {
-        ...data,
-        id: snapshot.id,
-        created_at: timestamp,
+      let data = {
+        uid,
+        name,
+        description,
+        category,
+        gender,
+        price: parseInt(price, 10),
+        images,
+        sizes,
+        updated_at: timestamp,
       };
 
-      await setDoc(snapshot, data);
+      if (id) {
+        const docRef = await doc(productsRef, id);
+
+        if (id === '') {
+          data = {
+            ...data,
+            id: docRef.id,
+          };
+        }
+
+        await updateDoc(docRef, data);
+      } else {
+        const snapshot = await doc(productsRef);
+
+        data = {
+          ...data,
+          id: snapshot.id,
+          created_at: timestamp,
+        };
+
+        await setDoc(snapshot, data);
+      }
+
+      delete data.created_at;
+      delete data.updated_at;
+
+      dispatch(setLoading(false));
+      dispatch(setAlert('success', 'Product saved successfully'));
+      dispatch(push('/'));
+      dispatch({ type: UPDATE_PRODUCT, payload: data });
+    } catch (error) {
+      dispatch(
+        setAlert('error', 'Something went wrong. Please try again later.')
+      );
+      console.error(error);
+      return false;
     }
-
-    delete data.created_at;
-    delete data.updated_at;
-
-    dispatch(setLoading(false));
-    dispatch(push('/'));
-    dispatch({ type: UPDATE_PRODUCT, payload: data });
   };
 
 // Order product process
@@ -111,6 +138,8 @@ export const orderProduct =
       let products = [];
       let soldOutProducts = [];
       const batch = await writeBatch(db);
+
+      dispatch(setLoading(true));
 
       for (const product of productsInCart) {
         const productRef = await doc(productsRef, product.pid);
@@ -149,8 +178,13 @@ export const orderProduct =
           soldOutProducts.length > 1
             ? soldOutProducts.join('and')
             : soldOutProducts[0];
-        alert(
-          `We are very sorry. The order process has been suspended because the ${errorMessage} are no longer in stock.`
+
+        dispatch(setLoading(false));
+        dispatch(
+          setAlert(
+            'error',
+            `We are very sorry. The order process has been suspended because the ${errorMessage} are no longer in stock.`
+          )
         );
       }
 
@@ -173,6 +207,14 @@ export const orderProduct =
       };
 
       await setDoc(orderDoc, history);
+
+      setTimeout(() => {
+        dispatch(setLoading(false));
+        dispatch(
+          setAlert('success', `Order ID ${history.id} orderd successfully!`)
+        );
+        dispatch(push('/'));
+      }, 1000);
     } catch (error) {
       dispatch(setAlert('error', 'Order processing failed.'));
       console.error(error);

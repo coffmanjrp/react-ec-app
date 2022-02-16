@@ -8,8 +8,8 @@ const OrderedProducts = ({ products }) => {
 
   return (
     <List>
-      {products.map((product) => (
-        <ListItem key={product.id} sx={classes.list}>
+      {products.map((product, index) => (
+        <ListItem key={`${product.id}-${index}`} sx={classes.list}>
           <ListItemAvatar>
             <ListImage src={product.images[0].path} alt={product.name} />
           </ListItemAvatar>

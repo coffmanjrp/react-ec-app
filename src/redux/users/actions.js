@@ -27,6 +27,7 @@ import { setLoading } from '../loading/actions';
 
 const usersRef = collection(db, 'users');
 
+// Fetch user data
 export const fetchUser = () => async (dispatch) => {
   const uid = auth.currentUser.uid;
 
@@ -45,43 +46,61 @@ export const fetchUser = () => async (dispatch) => {
 
 // Fetch products in cart list
 export const fetchProductsInCart = () => async (dispatch, getState) => {
-  const uid = getState().users.uid;
-  const userRef = await doc(usersRef, uid);
-  const usersCartRef = await collection(userRef, 'cart');
+  try {
+    dispatch(setLoading(true));
 
-  const snapshot = await getDocs(usersCartRef);
+    const uid = getState().users.uid;
+    const userRef = await doc(usersRef, uid);
+    const usersCartRef = await collection(userRef, 'cart');
 
-  const productsInCart = [];
+    const snapshot = await getDocs(usersCartRef);
 
-  await snapshot.docs.forEach((doc) => {
-    const data = doc.data();
-    delete data.added_at;
+    const productsInCart = [];
 
-    productsInCart.push({ ...data, id: doc.id });
-  });
+    await snapshot.docs.forEach((doc) => {
+      const data = doc.data();
+      delete data.added_at;
 
-  dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
+      productsInCart.push({ ...data, id: doc.id });
+    });
+
+    dispatch(setLoading(false));
+    dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
+  } catch (error) {
+    dispatch(setAlert('error', 'Faild fetching products in cart'));
+    console.error(error);
+    return false;
+  }
 };
 
 export const fetchOrderHistory = () => async (dispatch, getState) => {
-  const uid = getState().users.uid;
-  const list = [];
+  try {
+    const uid = getState().users.uid;
+    const list = [];
 
-  const userRef = await doc(usersRef, uid);
-  const usersOrdersRef = await collection(userRef, 'orders');
-  const q = query(usersOrdersRef, orderBy('updated_at', 'desc'));
-  const snapshots = await getDocs(q);
+    const userRef = await doc(usersRef, uid);
+    const usersOrdersRef = await collection(userRef, 'orders');
+    const q = query(usersOrdersRef, orderBy('updated_at', 'desc'));
+    const snapshots = await getDocs(q);
 
-  await snapshots.forEach((snapshot) => {
-    const data = snapshot.data();
-    delete data.created_at;
-    delete data.updated_at;
-    delete data.shipping_date;
+    dispatch(setLoading(true));
 
-    list.push(data);
-  });
+    await snapshots.forEach((snapshot) => {
+      const data = snapshot.data();
+      delete data.created_at;
+      delete data.updated_at;
+      delete data.shipping_date;
 
-  dispatch({ type: FETCH_ORDERS_HISTORY, payload: list });
+      list.push(data);
+    });
+
+    dispatch(setLoading(false));
+    dispatch({ type: FETCH_ORDERS_HISTORY, payload: list });
+  } catch (error) {
+    dispatch(setAlert('error', 'Faild fetching order history'));
+    console.error(error);
+    return false;
+  }
 };
 
 // Add selelcted product to cart
@@ -188,6 +207,7 @@ export const signIn = (email, password) => async (dispatch) => {
   } catch (error) {
     dispatch(setAlert('error', 'Invalid Email or Password'));
     console.error(error);
+    return false;
   }
 };
 
@@ -229,5 +249,6 @@ export const resetPassword = (email) => async (dispatch) => {
       )
     );
     console.error(error);
+    return false;
   }
 };

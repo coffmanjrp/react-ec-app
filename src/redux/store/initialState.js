@@ -12,6 +12,7 @@ const initialState = {
   },
   loading: false,
   alert: {
+    id: '',
     type: '',
     message: '',
   },

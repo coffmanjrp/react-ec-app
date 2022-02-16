@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Divider, List, Typography } from '@mui/material';
@@ -9,7 +8,6 @@ import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { orderProduct } from 'redux/products/actions';
 
 const OrderConfirm = () => {
-  const navigate = useNavigate();
   const { cart: productsInCart } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
@@ -25,7 +23,7 @@ const OrderConfirm = () => {
   const order = useCallback(() => {
     dispatch(orderProduct(productsInCart, total));
 
-    navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productsInCart, total]);
 
   return (

@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
   Box,
@@ -15,6 +15,7 @@ import {
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SearchIcon from '@mui/icons-material/Search';
 import { TextInput } from '../UIkit';
+import { fetchCategories } from 'redux/categories/actions';
 import { signOut } from 'redux/users/actions';
 import { menus } from 'utils/data';
 
@@ -22,6 +23,13 @@ const ClosableDrawer = ({ open, onClose }) => {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { list } = useSelector((state) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const inputKeyword = useCallback(
     (e) => {
@@ -67,6 +75,18 @@ const ClosableDrawer = ({ open, onClose }) => {
               >
                 <ListItemIcon>{menu.icon}</ListItemIcon>
                 <ListItemText primary={menu.label} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {list?.map((item) => (
+              <ListItem
+                key={item.id}
+                button
+                onClick={() => navigate(`/categories/${item.id}`)}
+              >
+                <ListItemText primary={item.name} />
               </ListItem>
             ))}
           </List>

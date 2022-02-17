@@ -45,11 +45,11 @@ export const fetchUser = () => async (dispatch) => {
 };
 
 // Fetch products in cart list
-export const fetchProductsInCart = () => async (dispatch, getState) => {
+export const fetchProductsInCart = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
 
-    const uid = getState().users.uid;
+    const uid = auth.currentUser.uid;
     const userRef = await doc(usersRef, uid);
     const usersCartRef = await collection(userRef, 'cart');
 
@@ -73,9 +73,9 @@ export const fetchProductsInCart = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchOrderHistory = () => async (dispatch, getState) => {
+export const fetchOrderHistory = () => async (dispatch) => {
   try {
-    const uid = getState().users.uid;
+    const uid = auth.currentUser.uid;
     const list = [];
 
     const userRef = await doc(usersRef, uid);

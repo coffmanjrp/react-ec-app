@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from '@mui/material';
 import { ProductCard } from 'components/Products';
+import { fetchCategories } from 'redux/categories/actions';
 import { fetchProducts } from 'redux/products/actions';
-import { fetchUser } from 'redux/users/actions';
-import { fetchProductsInCart } from 'redux/users/actions';
+import { fetchUser, fetchProductsInCart } from 'redux/users/actions';
 
 const ProductList = () => {
   const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const ProductList = () => {
     dispatch(fetchUser());
     dispatch(fetchProducts());
     dispatch(fetchProductsInCart());
+    dispatch(fetchCategories());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

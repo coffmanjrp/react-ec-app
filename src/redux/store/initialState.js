@@ -1,4 +1,11 @@
 const initialState = {
+  alert: {
+    id: '',
+    type: '',
+    message: '',
+  },
+  categories: [],
+  loading: false,
   products: {
     list: [],
   },
@@ -9,12 +16,6 @@ const initialState = {
     uid: '',
     username: '',
     email: '',
-  },
-  loading: false,
-  alert: {
-    id: '',
-    type: '',
-    message: '',
   },
 };
 

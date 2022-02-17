@@ -8,7 +8,7 @@ import { SelectBox, TextInput } from 'components/UIkit';
 import { PrimaryButton } from 'components/UIkit/CustomButtons';
 import { db } from 'db';
 import { saveProduct } from 'redux/products/actions';
-import { genders, categories } from 'utils/data';
+import { genders } from 'utils/data';
 
 const ProductEdit = () => {
   const [name, setName] = useState('');
@@ -18,10 +18,10 @@ const ProductEdit = () => {
   const [price, setPrice] = useState('');
   const [images, setImages] = useState([]);
   const [sizes, setSizes] = useState([]);
-  // const [categories, setCategories] = useState([]);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { uid } = useSelector((state) => state.users);
+  const { categories, users } = useSelector((state) => state);
+  const { uid } = users;
 
   useEffect(() => {
     fetchProduct(id);
@@ -89,7 +89,7 @@ const ProductEdit = () => {
         <SelectBox
           label="Category"
           required={true}
-          options={categories}
+          options={categories.list}
           value={category}
           select={setCategory}
         />

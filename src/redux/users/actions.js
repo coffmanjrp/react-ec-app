@@ -29,43 +29,54 @@ const usersRef = collection(db, 'users');
 
 // Fetch user data
 export const fetchUser = () => async (dispatch) => {
-  const uid = auth.currentUser.uid;
+  try {
+    dispatch(setLoading(true));
 
-  const userRef = await doc(usersRef, uid);
-  const snapshot = await getDoc(userRef);
-  const snapshotData = snapshot.data();
-  const data = {
-    ...snapshotData,
-    uid,
-  };
-  delete data.created_at;
-  delete data.updated_at;
+    if (auth.currentUser) {
+      const uid = auth.currentUser?.uid;
+      const userRef = await doc(usersRef, uid);
+      const snapshot = await getDoc(userRef);
+      const snapshotData = snapshot.data();
+      const data = {
+        ...snapshotData,
+        uid,
+      };
+      delete data.created_at;
+      delete data.updated_at;
 
-  dispatch({ type: FETCH_USER, payload: data });
+      dispatch({ type: FETCH_USER, payload: data });
+    }
+  } catch (error) {
+    dispatch(setAlert('error', 'Faild fetching user'));
+    console.error(error);
+    return false;
+  }
 };
 
 // Fetch products in cart list
 export const fetchProductsInCart = () => async (dispatch) => {
   try {
-    dispatch(setLoading(true));
+    if (auth.currentUser) {
+      dispatch(setLoading(true));
 
-    const uid = auth.currentUser.uid;
-    const userRef = await doc(usersRef, uid);
-    const usersCartRef = await collection(userRef, 'cart');
+      const uid = auth.currentUser.uid;
+      const userRef = await doc(usersRef, uid);
+      const usersCartRef = await collection(userRef, 'cart');
 
-    const snapshot = await getDocs(usersCartRef);
+      const snapshot = await getDocs(usersCartRef);
 
-    const productsInCart = [];
+      const productsInCart = [];
 
-    await snapshot.docs.forEach((doc) => {
-      const data = doc.data();
-      delete data.added_at;
+      await snapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        delete data.added_at;
 
-      productsInCart.push({ ...data, id: doc.id });
-    });
+        productsInCart.push({ ...data, id: doc.id });
+      });
 
-    dispatch(setLoading(false));
-    dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
+      dispatch(setLoading(false));
+      dispatch({ type: FETCH_PRODUCTS_IN_CART, payload: productsInCart });
+    }
   } catch (error) {
     dispatch(setAlert('error', 'Faild fetching products in cart'));
     console.error(error);
@@ -75,27 +86,31 @@ export const fetchProductsInCart = () => async (dispatch) => {
 
 export const fetchOrderHistory = () => async (dispatch) => {
   try {
-    const uid = auth.currentUser.uid;
-    const list = [];
+    if (auth.currentUser) {
+      dispatch(setLoading(true));
 
-    const userRef = await doc(usersRef, uid);
-    const usersOrdersRef = await collection(userRef, 'orders');
-    const q = query(usersOrdersRef, orderBy('updated_at', 'desc'));
-    const snapshots = await getDocs(q);
+      const uid = auth.currentUser.uid;
+      const list = [];
 
-    dispatch(setLoading(true));
+      const userRef = await doc(usersRef, uid);
+      const usersOrdersRef = await collection(userRef, 'orders');
+      const q = query(usersOrdersRef, orderBy('updated_at', 'desc'));
+      const snapshots = await getDocs(q);
 
-    await snapshots.forEach((snapshot) => {
-      const data = snapshot.data();
-      delete data.created_at;
-      delete data.updated_at;
-      delete data.shipping_date;
+      dispatch(setLoading(true));
 
-      list.push(data);
-    });
+      await snapshots.forEach((snapshot) => {
+        const data = snapshot.data();
+        delete data.created_at;
+        delete data.updated_at;
+        delete data.shipping_date;
 
-    dispatch(setLoading(false));
-    dispatch({ type: FETCH_ORDERS_HISTORY, payload: list });
+        list.push(data);
+      });
+
+      dispatch(setLoading(false));
+      dispatch({ type: FETCH_ORDERS_HISTORY, payload: list });
+    }
   } catch (error) {
     dispatch(setAlert('error', 'Faild fetching order history'));
     console.error(error);
@@ -104,13 +119,23 @@ export const fetchOrderHistory = () => async (dispatch) => {
 };
 
 // Add selelcted product to cart
-export const addProductToCart = (product) => async () => {
-  const uid = auth.currentUser.uid;
-  const userRef = await doc(usersRef, uid);
-  const usersCartRef = await collection(userRef, 'cart');
-  const snapshot = await doc(usersCartRef);
+export const addProductToCart = (product) => async (dispatch) => {
+  try {
+    if (auth.currentUser) {
+      const uid = auth.currentUser.uid;
+      const userRef = await doc(usersRef, uid);
+      const usersCartRef = await collection(userRef, 'cart');
+      const snapshot = await doc(usersCartRef);
 
-  await setDoc(snapshot, product);
+      await setDoc(snapshot, product);
+    }
+  } catch (error) {
+    dispatch(
+      setAlert('error', 'Faild to add product to cart. Please try again later.')
+    );
+    console.error(error);
+    return false;
+  }
 };
 
 // Sign up user

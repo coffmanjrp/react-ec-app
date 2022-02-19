@@ -3,8 +3,11 @@ import HistoryIcon from '@mui/icons-material/History';
 
 export const genders = [
   { id: 'all', name: 'All' },
-  { id: 'male', name: 'Mens' },
+  { id: 'women', name: 'Women' },
+  { id: 'men', name: 'Men' },
   { id: 'female', name: 'Women' },
+  { id: 'girls', name: 'Girls' },
+  { id: 'baby', name: 'Baby' },
 ];
 
 export const categories = [

@@ -52,7 +52,7 @@ const ProductDetail = () => {
   );
 
   return (
-    <Box component="section" className="c-section-wrapings">
+    <Box component="section" className="c-section-wrapin">
       {product ? (
         <Box className="p-grid__row">
           <SliderBox>

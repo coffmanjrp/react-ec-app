@@ -82,7 +82,7 @@ export const saveProduct =
         description,
         category,
         gender,
-        price: parseInt(price, 10),
+        price: Number(price),
         images,
         sizes,
         updated_at: timestamp,

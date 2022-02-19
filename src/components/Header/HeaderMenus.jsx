@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
-import { Badge, IconButton } from '@mui/material';
+import { Badge, IconButton, Popover, Typography } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
 import { db } from 'db';
@@ -11,6 +11,7 @@ import { fetchProductsInCart, signOut } from 'redux/users/actions';
 import { UserAvatar } from '../UIkit';
 
 const HeaderMenus = ({ handleDrawerToggle }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -18,6 +19,7 @@ const HeaderMenus = ({ handleDrawerToggle }) => {
     username,
     uid,
   } = useSelector((state) => state.users);
+  const open = Boolean(anchorEl);
 
   useEffect(() => {
     unsubscribe();
@@ -70,9 +72,37 @@ const HeaderMenus = ({ handleDrawerToggle }) => {
           <ShoppingCartIcon />
         </Badge>
       </IconButton>
-      <IconButton onClick={handleSignOut}>
+      <IconButton
+        onClick={handleSignOut}
+        aria-owns={open ? 'signout-popover' : undefined}
+        aria-haspopup="true"
+        onMouseEnter={(e) => setAnchorEl(e.currentTarget)}
+        onMouseLeave={() => setAnchorEl(null)}
+      >
         <UserAvatar username={username} />
       </IconButton>
+      <Popover
+        id="signout-popover"
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={() => setAnchorEl(null)}
+        disableRestoreFocus
+      >
+        <Typography variant="caption" sx={{ px: 1 }}>
+          Sign Out
+        </Typography>
+      </Popover>
       <IconButton onClick={(e) => handleDrawerToggle(e)}>
         <MenuIcon />
       </IconButton>

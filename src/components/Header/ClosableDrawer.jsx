@@ -84,7 +84,10 @@ const ClosableDrawer = ({ open, onClose }) => {
               <ListItem
                 key={item.id}
                 button
-                onClick={() => navigate(`/?category=${item.id}`)}
+                onClick={(e) => {
+                  navigate(`/?category=${item.id}`);
+                  onClose(e);
+                }}
               >
                 <ListItemText primary={item.name} onClick={(e) => onClose(e)} />
               </ListItem>

@@ -16,6 +16,7 @@ export const fetchCategories = () => async (dispatch) => {
 
     list.push({
       id: doc.id,
+      query: data.query,
       name: data.name,
       order: data.order,
     });

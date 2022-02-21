@@ -21,12 +21,11 @@ import { setLoading } from '../loading/actions';
 const productsRef = collection(db, 'products');
 
 // Fetch products collection from firebase
-export const fetchProducts = (gender, category) => async (dispatch) => {
+export const fetchProducts = (category) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     let q = query(productsRef, orderBy('updated_at', 'desc'));
-    q = gender ? query(productsRef, where('gender', '==', gender)) : q;
-    q = category ? query(where('category', '==', category)) : q;
+    q = category ? query(productsRef, where('category', '==', category)) : q;
 
     const snapshot = await getDocs(q);
 

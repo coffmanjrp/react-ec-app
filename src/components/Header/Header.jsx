@@ -1,12 +1,16 @@
 import { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
 import { AppBar, Box, Toolbar } from '@mui/material';
 import { ClosableDrawer, HeaderMenus } from '.';
 import logo from 'assets/img/logo.png';
+import { fetchProducts } from 'redux/products/actions';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { uid } = useSelector((state) => state.users);
 
   const handleDrawerToggle = useCallback(
@@ -20,13 +24,18 @@ const Header = () => {
     [setOpen]
   );
 
+  const handleClick = () => {
+    navigate('/');
+    dispatch(fetchProducts());
+  };
+
   return (
     <Box setIndex={classes.root}>
       <AppBar position="fixed" sx={{ bgcolor: '#fff', color: '#444' }}>
         <Toolbar sx={classes.toolBar}>
-          <Link to="/">
+          <Logo onClick={handleClick}>
             <img src={logo} alt="Logo" width="128px" />
-          </Link>
+          </Logo>
           {uid && (
             <Box sx={classes.iconButtons}>
               <HeaderMenus handleDrawerToggle={handleDrawerToggle} />
@@ -38,6 +47,10 @@ const Header = () => {
     </Box>
   );
 };
+
+const Logo = styled('div')({
+  cursor: 'pointer',
+});
 
 const classes = {
   root: { flexGrow: 1 },

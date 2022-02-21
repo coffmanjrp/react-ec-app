@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
@@ -18,12 +18,15 @@ import { TextInput } from '../UIkit';
 import { fetchCategories } from 'redux/categories/actions';
 import { signOut } from 'redux/users/actions';
 import { menus } from 'utils/data';
+import { fetchProducts } from 'redux/products/actions';
 
 const ClosableDrawer = ({ open, onClose }) => {
   const [keyword, setKeyword] = useState('');
+  const { search } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { list } = useSelector((state) => state.categories);
+  const query = useMemo(() => new URLSearchParams(search).get('q'), [search]);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -40,6 +43,15 @@ const ClosableDrawer = ({ open, onClose }) => {
 
   const handleSignOut = () => {
     dispatch(signOut());
+  };
+
+  console.log(query);
+
+  const handleClick = (e, q, id) => {
+    navigate(`/?q=${q}`);
+    onClose(e);
+
+    dispatch(fetchProducts(id));
   };
 
   return (
@@ -84,12 +96,12 @@ const ClosableDrawer = ({ open, onClose }) => {
               <ListItem
                 key={item.id}
                 button
-                onClick={(e) => {
-                  navigate(`/?category=${item.id}`);
-                  onClose(e);
-                }}
+                onClick={(e) => handleClick(e, item.query, item.id)}
               >
-                <ListItemText primary={item.name} onClick={(e) => onClose(e)} />
+                <ListItemText
+                  primary={item.name}
+                  onClick={(e) => handleClick(e, item.query, item.id)}
+                />
               </ListItem>
             ))}
           </List>

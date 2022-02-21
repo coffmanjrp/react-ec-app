@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ProductCard } from 'components/Products';
 import { fetchCategories } from 'redux/categories/actions';
 import { fetchProducts } from 'redux/products/actions';
@@ -22,10 +22,13 @@ const ProductList = () => {
   return (
     <Box component="section" className="c-section-wrapin">
       <Box className="p-grid__row">
-        {products.length > 0 &&
+        {products.length > 0 ? (
           products.map((product) => (
             <ProductCard key={product.id} {...product} />
-          ))}
+          ))
+        ) : (
+          <Typography variant="body1">No results found</Typography>
+        )}
       </Box>
     </Box>
   );

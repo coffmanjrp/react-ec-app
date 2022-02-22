@@ -100,6 +100,7 @@ const classes = {
   media: {
     paddingTop: '100%',
     height: 0,
+    backgroundSize: 'contain',
   },
 };
 

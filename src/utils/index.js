@@ -36,6 +36,11 @@ export const returnCodeToBr = (text) => {
   }
 };
 
+// Fix search term to queries
 export const termToQuery = (text) => {
-  return text.replace(/["'/]/g, '').replace(/\s/g, '_').toLowerCase();
+  return text
+    .replace(/["'/()]/g, '')
+    .replace(/&/g, 'and')
+    .replace(/[\s-]/g, '_')
+    .toLowerCase();
 };

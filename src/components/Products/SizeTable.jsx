@@ -26,11 +26,6 @@ const SizeTable = ({ sizes, addProduct }) => {
                     <AddShoppingCartIcon />
                   </IconButton>
                 </TableCell>
-                <TableCell>
-                  <IconButton>
-                    <FavoriteBorderIcon />
-                  </IconButton>
-                </TableCell>
               </TableRow>
             ))}
         </TableBody>

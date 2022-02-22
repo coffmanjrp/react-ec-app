@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import {
@@ -20,13 +20,13 @@ import { signOut } from 'redux/users/actions';
 import { menus } from 'utils/data';
 import { fetchProducts } from 'redux/products/actions';
 
+import { termToQuery } from 'utils';
+
 const ClosableDrawer = ({ open, onClose }) => {
   const [keyword, setKeyword] = useState('');
-  const { search } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { list } = useSelector((state) => state.categories);
-  const query = useMemo(() => new URLSearchParams(search).get('q'), [search]);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -45,13 +45,22 @@ const ClosableDrawer = ({ open, onClose }) => {
     dispatch(signOut());
   };
 
-  console.log(query);
-
-  const handleClick = (e, q, id) => {
+  const handleFilter = (e, q, id) => {
     navigate(`/?q=${q}`);
     onClose(e);
 
-    dispatch(fetchProducts(id));
+    dispatch(fetchProducts(id, 'category'));
+  };
+
+  const handleSearch = (e) => {
+    const query = termToQuery(keyword);
+
+    navigate(`/?q=${query}`);
+    onClose(e);
+
+    dispatch(fetchProducts(query, 'search'));
+
+    setKeyword('');
   };
 
   return (
@@ -73,7 +82,7 @@ const ClosableDrawer = ({ open, onClose }) => {
             value={keyword}
             onChange={inputKeyword}
           />
-          <IconButton onClick={(e) => onClose(e)}>
+          <IconButton onClick={(e) => handleSearch(e)}>
             <SearchIcon />
           </IconButton>
         </SearchField>
@@ -96,11 +105,11 @@ const ClosableDrawer = ({ open, onClose }) => {
               <ListItem
                 key={item.id}
                 button
-                onClick={(e) => handleClick(e, item.query, item.id)}
+                onClick={(e) => handleFilter(e, item.query, item.id)}
               >
                 <ListItemText
                   primary={item.name}
-                  onClick={(e) => handleClick(e, item.query, item.id)}
+                  onClick={(e) => handleFilter(e, item.query, item.id)}
                 />
               </ListItem>
             ))}

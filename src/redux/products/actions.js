@@ -17,15 +17,27 @@ import { auth, db, timestamp } from 'db';
 import { FETCH_PRODUCTS, DELETE_PRODUCT, UPDATE_PRODUCT } from './constants';
 import { setAlert } from '../alert/actions';
 import { setLoading } from '../loading/actions';
+import { termToQuery } from 'utils';
 
 const productsRef = collection(db, 'products');
 
 // Fetch products collection from firebase
-export const fetchProducts = (category) => async (dispatch) => {
+export const fetchProducts = (term, type) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     let q = query(productsRef, orderBy('updated_at', 'desc'));
-    q = category ? query(productsRef, where('category', '==', category)) : q;
+    q =
+      type === 'category'
+        ? query(productsRef, where('category', '==', term))
+        : q;
+    q =
+      type === 'search'
+        ? query(
+            productsRef,
+            where('query', '>=', term),
+            orderBy('query', 'desc')
+          )
+        : q;
 
     const snapshot = await getDocs(q);
 
@@ -84,6 +96,7 @@ export const saveProduct =
         price: Number(price),
         images,
         sizes,
+        query: termToQuery(name),
         updated_at: timestamp,
       };
 

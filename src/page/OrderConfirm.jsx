@@ -16,9 +16,9 @@ const OrderConfirm = () => {
     [productsInCart]
   );
 
-  const shippingFee = subtotal >= 100000 ? 0 : 210;
+  const shippingFee = subtotal >= 1000 ? 0 : 2;
   const tax = Math.floor(subtotal * 0.1);
-  const total = Math.floor(subtotal + shippingFee + tax);
+  const total = subtotal + shippingFee + tax;
 
   const order = useCallback(() => {
     dispatch(orderProduct(productsInCart, total));

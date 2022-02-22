@@ -35,3 +35,7 @@ export const returnCodeToBr = (text) => {
     return HTMLReactParser(text.replace(/\r?\n/g, '<br />'));
   }
 };
+
+export const termToQuery = (text) => {
+  return text.replace(/["'/]/g, '').replace(/\s/g, '_').toLowerCase();
+};

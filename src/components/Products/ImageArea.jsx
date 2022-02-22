@@ -46,17 +46,6 @@ const ImageArea = ({ id, images, setImages }) => {
             const value =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             setProgress(value);
-            console.log('Upload is ' + value + '% done');
-            switch (snapshot.state) {
-              case 'paused':
-                console.log('Upload is paused');
-                break;
-              case 'running':
-                console.log('Upload is running');
-                break;
-              default:
-                break;
-            }
           },
           (error) => {
             reject(error);
@@ -98,7 +87,7 @@ const ImageArea = ({ id, images, setImages }) => {
         </>
       </Box>
       <Box className="u-text-right">
-        <span>Register images</span>
+        <span>Upload image</span>
         <IconButton sx={classes.icon}>
           <label>
             <AddPhotoAlternateIcon />

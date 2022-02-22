@@ -36,13 +36,13 @@ const SignUp = () => {
   return (
     <Box component="form" className="c-section-container">
       <Typography variant="h4" className="u-text__headline u-text-center">
-        Account registration
+        Create account
       </Typography>
       <Box className="module-spacer--medium" />
       <TextInput
         type="text"
         name="username"
-        label="Username"
+        label="Your name"
         fullWidth={true}
         multiline={false}
         rows={1}
@@ -82,7 +82,7 @@ const SignUp = () => {
       <TextInput
         type="password"
         name="confirmedPassword"
-        label="Re-enter your password"
+        label="Re-enter password "
         fullWidth={true}
         multiline={false}
         rows={1}
@@ -100,7 +100,7 @@ const SignUp = () => {
           <StyledLink to="/signin/reset">Forgot your password?</StyledLink>
         </Typography>
         <Typography variant="subtitle2">
-          <StyledLink to="/signin">SignIn page</StyledLink>
+          <StyledLink to="/signin">Already have an account? </StyledLink>
         </Typography>
       </Box>
     </Box>

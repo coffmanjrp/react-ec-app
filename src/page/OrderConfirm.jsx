@@ -29,7 +29,7 @@ const OrderConfirm = () => {
   return (
     <Box component="section" className="c-section-wrapin">
       <Typography variant="h4" className="u-text__headline">
-        Order Confirmation
+        Checkout
       </Typography>
       <Box className="p-grid__row">
         <DetailBox>
@@ -41,21 +41,21 @@ const OrderConfirm = () => {
           </List>
         </DetailBox>
         <OrderBox>
+          <TextDetail label="Items" value={`$ ${subtotal.toLocaleString()}`} />
           <TextDetail
-            label="Merchandise total"
-            value={`$ ${subtotal.toLocaleString()}`}
+            label="Estimated tax to be collected"
+            value={`$ ${tax.toLocaleString()}`}
           />
-          <TextDetail label="Tax" value={`$ ${tax.toLocaleString()}`} />
           <TextDetail
-            label="Postage"
+            label="Shipping &amp; handling"
             value={`$ ${shippingFee.toLocaleString()}`}
           />
           <Divider />
           <TextDetail
-            label="Total (including tax)"
+            label="Order total"
             value={`$ ${total.toLocaleString()}`}
           />
-          <PrimaryButton label="Order Now" onClick={order} />
+          <PrimaryButton label="Place your order" onClick={order} />
         </OrderBox>
       </Box>
     </Box>

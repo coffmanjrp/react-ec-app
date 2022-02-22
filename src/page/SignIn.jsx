@@ -34,7 +34,7 @@ const SignIn = () => {
   return (
     <Box component="form" className="c-section-container">
       <Typography variant="h4" className="u-text__headline u-text-center">
-        Sign In
+        Sign-In
       </Typography>
       <Box className="module-spacer--medium" />
       <TextInput
@@ -68,12 +68,12 @@ const SignIn = () => {
       </Box>
       <Box className="module-spacer--medium" />
       <Box className="center">
-        <PrimaryButton label="Sign In" onClick={handleSignIn}>
+        <PrimaryButton label="Sign-In" onClick={handleSignIn}>
           Register
         </PrimaryButton>
         <Box className="module-spacer--medium" />
         <Typography variant="subtitle2">
-          <StyledLink to="/signup">Create account</StyledLink>
+          <StyledLink to="/signup">Create your account</StyledLink>
         </Typography>
         <Typography variant="subtitle2">
           <StyledLink to="/signin/reset">Forgot your password?</StyledLink>

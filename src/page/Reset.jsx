@@ -38,10 +38,10 @@ const Reset = () => {
         <PrimaryButton label="Send reset email" onClick={handleReset} />
         <Box className="module-spacer--medium" />
         <Typography variant="subtitle2">
-          <StyledLink to="/signup">Create account</StyledLink>
+          <StyledLink to="/signup">Create your account</StyledLink>
         </Typography>
         <Typography variant="subtitle2">
-          <StyledLink to="/signin">SignIn page</StyledLink>
+          <StyledLink to="/signin">Go to Sign-In page</StyledLink>
         </Typography>
       </Box>
     </Box>

@@ -7,7 +7,6 @@ import {
   TableRow,
 } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const SizeTable = ({ sizes, addProduct }) => {
   return (

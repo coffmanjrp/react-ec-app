@@ -14,7 +14,11 @@ const ProductDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => fetchProduct(), []);
+  useEffect(
+    () => fetchProduct(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const fetchProduct = async () => {
     const productsRef = await collection(db, 'products');
